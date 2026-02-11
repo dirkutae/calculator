@@ -4,41 +4,41 @@
     <meta charset="UTF-8">
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.85);
             --apple-blue: #007AFF;
-            --apple-orange-dark: #C45100; /* Глубокий оранжевый для высокой контрастности */
-            --apple-orange-btn: #D35400;  /* Темно-оранжевый для кнопки */
+            --apple-orange-dark: #C45100;
+            --apple-orange-btn: #FF9500;
             --apple-gray: #8E8E93;
             --text-dark: #1d1d1f;
         }
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            padding: 16px; 
+            padding: 12px; 
             background: #f2f2f7; 
             color: var(--text-dark); 
             margin: 0;
-            -webkit-font-smoothing: antialiased;
+            overflow: hidden; /* Предотвращаем лишнюю прокрутку */
         }
 
         .field-group { 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; 
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             padding: 8px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border-radius: 14px; /* Скругление как у Apple */
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
         label { 
             display: block; 
             font-size: 10px; 
             color: var(--apple-gray); 
-            margin-bottom: 4px; 
+            margin-bottom: 3px; 
             text-transform: uppercase; 
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
             font-weight: 600; 
         }
 
@@ -50,96 +50,75 @@
             font-size: 15px; 
             color: #000;
             outline: none;
+            border-radius: 8px;
         }
 
         /* Информационное поле дня недели */
-        .info-field { 
-            color: #444; 
-            font-weight: 500; 
-            cursor: default;
-        }
+        .info-field { color: #555; font-weight: 500; cursor: default; }
 
-        /* Стилизация иконки календаря */
+        /* Кастомизация иконки календаря - Скругление */
+        input[type="date"] { border-radius: 10px; }
         input[type="date"]::-webkit-calendar-picker-indicator {
-            font-size: 22px; /* Увеличен размер */
+            font-size: 20px;
             cursor: pointer;
-            /* Перекрашиваем в синий цвет кнопки */
             filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
         }
 
-        /* Стилизация стрелок (Spinners) */
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
+        /* Всегда видимые и синие стрелочки */
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
-            opacity: 1 !important; /* Всегда видимые */
+            opacity: 1 !important;
             height: 32px;
-            width: 28px;
-            cursor: pointer;
-            /* Убираем квадратный фон и красим стрелки в синий */
-            appearance: none;
-            background: transparent;
+            width: 24px;
             filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
+            cursor: pointer;
         }
 
-        /* Предупреждение (Темный оранжевый, без дня недели) */
+        /* Предупреждение */
         #warning { 
             display: none; 
             background: var(--apple-orange-dark); 
             color: white; 
-            padding: 12px; 
-            border-radius: 14px; 
-            font-size: 13px; 
-            margin-bottom: 15px; 
+            padding: 10px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+            margin-bottom: 12px; 
             font-weight: 600; 
             text-align: center;
-            box-shadow: 0 4px 12px rgba(196, 81, 0, 0.3);
         }
 
         /* Контейнер результата (Жирный текст) */
         .res-container { 
-            margin-top: 15px; 
-            padding: 18px; 
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            border-radius: 16px; 
-            border: 1px solid rgba(255, 255, 255, 0.5); 
-            min-height: 110px;
+            margin-top: 12px; 
+            padding: 16px; 
+            background: #fff;
+            border-radius: 18px; 
+            border: 1px solid rgba(0,0,0,0.05); 
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            font-weight: 800; /* Максимально жирный текст */
+            font-weight: 800;
         }
 
-        .calc-line { font-size: 14px; color: var(--text-dark); margin-bottom: 8px; line-height: 1.4; }
+        .calc-line { font-size: 14px; color: var(--text-dark); margin-bottom: 6px; line-height: 1.4; }
         .offer-line { font-size: 14px; color: var(--apple-orange-dark); text-transform: uppercase; }
 
-        .btn-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
+        .btn-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
         
         .btn { 
-            height: 48px; border: none; border-radius: 14px; cursor: pointer; 
+            height: 46px; border: none; border-radius: 16px; cursor: pointer; 
             font-weight: 700; font-size: 13px; color: white; text-transform: uppercase;
-            transition: transform 0.2s, filter 0.2s;
+            transition: all 0.2s;
         }
 
         .btn-blue { background: linear-gradient(180deg, #007AFF 0%, #0056B3 100%); }
-        .btn-orange { background: linear-gradient(180deg, var(--apple-orange-btn) 0%, #B34500 100%); }
+        .btn-orange { background: linear-gradient(180deg, var(--apple-orange-btn) 0%, #E67E22 100%); }
         
-        .btn:active { transform: scale(0.98); filter: brightness(0.9); }
+        .btn:active { transform: scale(0.97); }
 
-        /* Логотип без фона и рамок */
-        .logo-container {
-            margin-top: 30px;
-            text-align: center;
-        }
-        .logo-container img {
-            max-width: 200px;
-            height: auto;
-            background: none;
-            border: none;
-            mix-blend-mode: multiply; /* Убирает белый фон у картинки, если он есть */
-        }
+        .logo-container { margin-top: 20px; text-align: center; }
+        .logo-container img { max-width: 180px; height: auto; border: none; }
     </style>
 </head>
 <body>
@@ -166,7 +145,7 @@
     </div>
 
     <div class="field-group">
-        <label>День недели</label>
+        <label>День недели (авто)</label>
         <input type="text" id="dayNameDisplay" class="info-field" readonly>
     </div>
 
@@ -226,7 +205,7 @@
             const dayIdx = dateObj.getDay(); 
             const dayName = daysNames[dayIdx];
             
-            // Обновляем информационное поле дня недели
+            // Заполняем поле дня недели
             document.getElementById('dayNameDisplay').value = dayName;
 
             const rate = priceList[zalName][dayIdx];
@@ -235,7 +214,6 @@
             const baseTotal = (rate * h) + cleaning;
             const totalWithDiscount = Math.round(baseTotal * (1 - discPct / 100));
 
-            // Проверка лимита часов (без дня недели в алерте)
             const warningEl = document.getElementById('warning');
             const isWeekend = (dayIdx === 0 || dayIdx === 5 || dayIdx === 6);
             const minHours = isWeekend ? 5 : 3;
@@ -265,7 +243,7 @@
                 document.execCommand('copy');
                 const resultBox = document.getElementById('resultBox');
                 resultBox.style.borderColor = "#007AFF";
-                setTimeout(() => { resultBox.style.borderColor = "rgba(255, 255, 255, 0.5)"; }, 600);
+                setTimeout(() => { resultBox.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
             } catch (err) { console.error(err); }
             document.body.removeChild(textArea);
         }
