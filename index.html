@@ -31,16 +31,18 @@
             justify-content: center;
         }
 
+        /* Информационное сообщение теперь полукруглое */
         #warning { 
             display: none; 
             width: 100%;
             background: var(--apple-orange); 
             color: white; 
-            padding: 8px; 
-            border-radius: 12px; 
+            padding: 10px; 
+            border-radius: 21px; /* Полукруглые края (высота wrapper ~42px) */
             font-size: 11px; 
             font-weight: 600; 
             text-align: center;
+            box-sizing: border-box;
         }
 
         .field-group { 
@@ -71,10 +73,18 @@
             opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px; cursor: pointer;
         }
 
+        /* Поле с расчетами с дополнительными отступами */
         .res-container { 
-            margin-top: 6px; padding: 12px; background: #fff;
-            border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); 
-            min-height: 75px; display: flex; flex-direction: column; justify-content: center;
+            margin-top: 15px; /* Увеличенный отступ сверху */
+            margin-bottom: 15px; /* Увеличенный отступ снизу */
+            padding: 12px; 
+            background: #fff;
+            border-radius: 14px; 
+            border: 1px solid rgba(0,0,0,0.05); 
+            min-height: 75px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
         }
 
         .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
@@ -83,7 +93,7 @@
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
         .btn { 
             height: 44px; border: none; 
-            border-radius: 22px; /* Полукруглые края (половина высоты) */
+            border-radius: 22px; /* Идеально полукруглые края */
             cursor: pointer; 
             font-weight: 700; font-size: 12px; color: white; text-transform: uppercase;
             transition: transform 0.1s;
@@ -162,7 +172,6 @@
 
         const daysNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 
-        // Форматирование через точку для предотвращения разрыва строки
         function formatPrice(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
