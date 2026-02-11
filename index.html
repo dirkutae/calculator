@@ -20,8 +20,45 @@
             overflow: hidden;
         }
 
-        .logo-container { text-align: center; margin-bottom: 8px; }
+        /* 1. СТИЛИЗАЦИЯ ВСПЛЫВАЮЩЕГО КАЛЕНДАРЯ (Круглые ячейки) */
+        /* Работает в браузерах Chrome/Edge/Opera */
+        ::-webkit-calendar-picker-indicator {
+            font-size: 28px;
+            cursor: pointer;
+            filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
+        }
+
+        /* Попытка скругления выделения даты во внутреннем календаре браузера */
+        input[type="date"]::-webkit-datetime-edit { padding: 5px; }
+        
+        /* Основная магия для скругления элементов выбора (где это поддерживает браузер) */
+        input[type="date"]::-webkit-calendar-picker {
+            border-radius: 20px !important;
+        }
+
+        /* 2. ОСТАЛЬНОЙ ИНТЕРФЕЙС */
+        .logo-container { text-align: center; margin-bottom: 35px; }
         .logo-container img { max-width: 140px; height: auto; mix-blend-mode: multiply; }
+
+        .warning-wrapper {
+            height: 40px; 
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #warning { 
+            display: none; 
+            width: 100%;
+            background: var(--apple-orange); 
+            color: white; 
+            padding: 8px; 
+            border-radius: 12px; 
+            font-size: 11px; 
+            font-weight: 600; 
+            text-align: center;
+        }
 
         .field-group { 
             margin-bottom: 6px; 
@@ -39,24 +76,12 @@
 
         select, input { 
             width: 100%; height: 28px; border: none; background: transparent;
-            font-size: 14px; color: #000; outline: none;
-        }
-
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            font-size: 28px;
-            cursor: pointer;
-            filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
+            font-size: 14px; color: #000; outline: none; border-radius: 10px;
         }
 
         input[type="number"]::-webkit-inner-spin-button {
             opacity: 1 !important; height: 28px; width: 25px;
-            background: #fff; border-radius: 4px; cursor: pointer;
-        }
-
-        #warning { 
-            display: none; background: var(--apple-orange); color: white; 
-            padding: 8px; border-radius: 10px; font-size: 11px; 
-            margin-bottom: 8px; font-weight: 600; text-align: center;
+            background: #fff; border-radius: 6px; cursor: pointer;
         }
 
         .res-container { 
@@ -70,7 +95,7 @@
 
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 10px; }
         .btn { 
-            height: 40px; border: none; border-radius: 12px; cursor: pointer; 
+            height: 40px; border: none; border-radius: 14px; cursor: pointer; 
             font-weight: 700; font-size: 12px; color: white; text-transform: uppercase;
         }
         .btn-blue { background: #007AFF; }
@@ -83,7 +108,9 @@
         <img src="logo.png" alt="Citrus Hall">
     </div>
 
-    <div id="warning">⚠️ МИНИМУМ 3 ЧАСА В ЭТОТ ДЕНЬ</div>
+    <div class="warning-wrapper">
+        <div id="warning">⚠️ МИНИМУМ 3 ЧАСА В ЭТОТ ДЕНЬ</div>
+    </div>
 
     <div class="field-group">
         <label>Зал</label>
@@ -144,7 +171,6 @@
 
         const daysNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 
-        // Форматирование чисел с пробелами
         function formatPrice(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         }
@@ -187,11 +213,12 @@
             const warningEl = document.getElementById('warning');
             const minHours = (dayIdx === 0 || dayIdx === 5 || dayIdx === 6) ? 5 : 3;
 
-            warningEl.style.display = (h < minHours && h > 0) ? 'block' : 'none';
-            if (h < minHours) {
-                // Корректное окончание для 5 часов
+            if (h < minHours && h > 0) {
+                warningEl.style.display = 'block';
                 let word = minHours === 5 ? "ЧАСОВ" : "ЧАСА";
                 warningEl.innerText = `⚠️ МИНИМУМ ${minHours} ${word} В ЭТОТ ДЕНЬ`;
+            } else {
+                warningEl.style.display = 'none';
             }
 
             document.getElementById('calcText').innerText = `Зал ${zalName}: ${formatPrice(rate)}р * ${h}ч + ${formatPrice(cleaning)} (уборка) = ${formatPrice(baseTotal)} руб`;
