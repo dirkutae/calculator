@@ -23,7 +23,6 @@
         .logo-container { text-align: center; margin-bottom: 10px; }
         .logo-container img { max-width: 130px; height: auto; mix-blend-mode: multiply; }
 
-        /* Фиксированное пространство под ошибку, чтобы поля не прыгали */
         .warning-wrapper {
             height: 42px; 
             margin-bottom: 8px;
@@ -63,13 +62,11 @@
             font-size: 14px; color: #000; outline: none;
         }
 
-        /* Увеличенная иконка календаря */
         input[type="date"]::-webkit-calendar-picker-indicator {
             font-size: 26px; cursor: pointer;
             filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
         }
 
-        /* Черные стрелки на белом фоне */
         input[type="number"]::-webkit-inner-spin-button {
             opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px; cursor: pointer;
         }
@@ -83,13 +80,17 @@
         .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
         .offer-line { font-size: 13px; color: var(--apple-orange); font-weight: 800; text-transform: uppercase; }
 
-        .btn-group { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
+        .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
         .btn { 
-            height: 38px; border: none; border-radius: 12px; cursor: pointer; 
+            height: 44px; border: none; 
+            border-radius: 22px; /* Полукруглые края (половина высоты) */
+            cursor: pointer; 
             font-weight: 700; font-size: 12px; color: white; text-transform: uppercase;
+            transition: transform 0.1s;
         }
         .btn-blue { background: #007AFF; }
         .btn-orange { background: var(--apple-orange); }
+        .btn:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
@@ -161,22 +162,20 @@
 
         const daysNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 
+        // Форматирование через точку для предотвращения разрыва строки
         function formatPrice(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
-        // Парсинг данных из названия сделки amoCRM
         function parseLeadData() {
             let data = { date: null, hours: 5 };
             try {
-                // Пытаемся достучаться до родительского окна amoCRM
                 let leadName = "";
                 if (window.parent && window.parent.AMOCRM && window.parent.AMOCRM.data && window.parent.AMOCRM.data.current_card) {
                     leadName = window.parent.AMOCRM.data.current_card.element.name;
                 }
 
                 if (leadName) {
-                    // 1. Дата (ищем ДД.ММ в названии)
                     let dateMatch = leadName.match(/(\d{1,2})\.(\d{2})/);
                     if (dateMatch) {
                         let d = parseInt(dateMatch[1]);
@@ -187,7 +186,6 @@
                         data.date = `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                     }
 
-                    // 2. Часы (разница времени)
                     let timeReg = /(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i;
                     let timeMatch = leadName.match(timeReg);
                     if (timeMatch) {
@@ -196,7 +194,7 @@
                         if (end > start) data.hours = end - start;
                     }
                 }
-            } catch(e) { console.log("Контекст amoCRM не найден"); }
+            } catch(e) {}
             return data;
         }
 
@@ -225,12 +223,10 @@
             const warningEl = document.getElementById('warning');
             const minHours = (dayIdx === 0 || dayIdx === 5 || dayIdx === 6) ? 5 : 3;
 
-            if (h < minHours && h > 0) {
-                warningEl.style.display = 'block';
+            warningEl.style.display = (h < minHours && h > 0) ? 'block' : 'none';
+            if (h < minHours) {
                 let word = minHours === 5 ? "ЧАСОВ" : "ЧАСА";
                 warningEl.innerText = `⚠️ МИНИМУМ ${minHours} ${word} В ЭТОТ ДЕНЬ`;
-            } else {
-                warningEl.style.display = 'none';
             }
 
             document.getElementById('calcText').innerText = `Зал ${zalName}: ${formatPrice(rate)}р * ${h}ч + ${formatPrice(cleaning)} (уборка) = ${formatPrice(baseTotal)} руб`;
