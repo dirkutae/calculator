@@ -13,35 +13,19 @@
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            padding: 10px; 
+            padding: 8px; 
             background: #f2f2f7; 
             color: var(--text-dark); 
             margin: 0;
             overflow: hidden;
         }
 
-        /* 1. СТИЛИЗАЦИЯ ВСПЛЫВАЮЩЕГО КАЛЕНДАРЯ (Круглые ячейки) */
-        /* Работает в браузерах Chrome/Edge/Opera */
-        ::-webkit-calendar-picker-indicator {
-            font-size: 28px;
-            cursor: pointer;
-            filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
-        }
-
-        /* Попытка скругления выделения даты во внутреннем календаре браузера */
-        input[type="date"]::-webkit-datetime-edit { padding: 5px; }
-        
-        /* Основная магия для скругления элементов выбора (где это поддерживает браузер) */
-        input[type="date"]::-webkit-calendar-picker {
-            border-radius: 20px !important;
-        }
-
-        /* 2. ОСТАЛЬНОЙ ИНТЕРФЕЙС */
-        .logo-container { text-align: center; margin-bottom: 35px; }
-        .logo-container img { max-width: 140px; height: auto; mix-blend-mode: multiply; }
+        /* Убран большой отступ после логотипа */
+        .logo-container { text-align: center; margin-bottom: 10px; }
+        .logo-container img { max-width: 130px; height: auto; mix-blend-mode: multiply; }
 
         .warning-wrapper {
-            height: 40px; 
+            height: 42px; 
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -75,27 +59,31 @@
         }
 
         select, input { 
-            width: 100%; height: 28px; border: none; background: transparent;
-            font-size: 14px; color: #000; outline: none; border-radius: 10px;
+            width: 100%; height: 26px; border: none; background: transparent;
+            font-size: 14px; color: #000; outline: none;
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            font-size: 26px; cursor: pointer;
+            filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
         }
 
         input[type="number"]::-webkit-inner-spin-button {
-            opacity: 1 !important; height: 28px; width: 25px;
-            background: #fff; border-radius: 6px; cursor: pointer;
+            opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px;
         }
 
         .res-container { 
-            margin-top: 8px; padding: 12px; background: #fff;
+            margin-top: 6px; padding: 12px; background: #fff;
             border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); 
-            min-height: 80px; display: flex; flex-direction: column; justify-content: center;
+            min-height: 75px; display: flex; flex-direction: column; justify-content: center;
         }
 
         .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
         .offer-line { font-size: 13px; color: var(--apple-orange); font-weight: 800; text-transform: uppercase; }
 
-        .btn-group { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 10px; }
+        .btn-group { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px; }
         .btn { 
-            height: 40px; border: none; border-radius: 14px; cursor: pointer; 
+            height: 38px; border: none; border-radius: 12px; cursor: pointer; 
             font-weight: 700; font-size: 12px; color: white; text-transform: uppercase;
         }
         .btn-blue { background: #007AFF; }
@@ -139,7 +127,7 @@
     <div style="display: flex; gap: 8px;">
         <div class="field-group" style="flex: 1;">
             <label>Часы</label>
-            <input type="number" id="hours" value="3" min="1" oninput="calculate()">
+            <input type="number" id="hours" value="5" min="1" oninput="calculate()">
         </div>
         <div class="field-group" style="flex: 1;">
             <label>Скидка %</label>
@@ -175,23 +163,39 @@
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         }
 
-        function getInitialDate() {
+        function parseLeadData() {
+            let data = { date: null, hours: 5 };
             try {
                 let leadName = window.parent.AMOCRM.data.current_card.element.name;
-                let datePart = leadName.substring(0, 5);
-                if (datePart.includes('.')) {
-                    let [d, m] = datePart.split('.').map(Number);
+
+                // Парсинг даты (ищем ДД.ММ)
+                let dateMatch = leadName.match(/(\d{1,2})\.(\d{2})/);
+                if (dateMatch) {
+                    let d = parseInt(dateMatch[1]);
+                    let m = parseInt(dateMatch[2]);
                     let now = new Date();
                     let year = now.getFullYear();
                     if (m < (now.getMonth() + 1) - 1) year++;
-                    return `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                    data.date = `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                }
+
+                // Парсинг часов (улучшенный поиск)
+                // Ищет паттерны типа "с 15-19", "10-17", "17:00-23:00", "с 09 до 18"
+                let timeReg = /(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i;
+                let timeMatch = leadName.match(timeReg);
+                if (timeMatch) {
+                    let start = parseInt(timeMatch[1]);
+                    let end = parseInt(timeMatch[2]);
+                    if (end > start) data.hours = end - start;
                 }
             } catch(e) {}
-            return new Date().toISOString().split('T')[0];
+            return data;
         }
 
         window.onload = function() {
-            document.getElementById('eventDate').value = getInitialDate();
+            let parsed = parseLeadData();
+            document.getElementById('eventDate').value = parsed.date || new Date().toISOString().split('T')[0];
+            document.getElementById('hours').value = parsed.hours;
             calculate();
         };
 
