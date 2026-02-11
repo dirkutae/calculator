@@ -6,8 +6,7 @@
         :root {
             --glass-bg: rgba(255, 255, 255, 0.85);
             --apple-blue: #007AFF;
-            --apple-orange-dark: #C45100;
-            --apple-orange-btn: #FF9500;
+            --apple-orange: #FF9500; /* Цвет как у кнопки */
             --apple-gray: #8E8E93;
             --text-dark: #1d1d1f;
         }
@@ -18,110 +17,78 @@
             background: #f2f2f7; 
             color: var(--text-dark); 
             margin: 0;
-            overflow: hidden; /* Предотвращаем лишнюю прокрутку */
+            overflow: hidden;
         }
 
+        .logo-container { text-align: center; margin-bottom: 15px; }
+        .logo-container img { max-width: 160px; height: auto; mix-blend-mode: multiply; }
+
         .field-group { 
-            margin-bottom: 10px; 
+            margin-bottom: 8px; 
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             padding: 8px 12px;
-            border-radius: 14px; /* Скругление как у Apple */
+            border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
         label { 
-            display: block; 
-            font-size: 10px; 
-            color: var(--apple-gray); 
-            margin-bottom: 3px; 
-            text-transform: uppercase; 
-            letter-spacing: 0.4px;
-            font-weight: 600; 
+            display: block; font-size: 10px; color: var(--apple-gray); 
+            margin-bottom: 3px; text-transform: uppercase; font-weight: 600; 
         }
 
         select, input { 
-            width: 100%; 
-            height: 32px; 
-            border: none; 
-            background: transparent;
-            font-size: 15px; 
-            color: #000;
-            outline: none;
-            border-radius: 8px;
+            width: 100%; height: 32px; border: none; background: transparent;
+            font-size: 15px; color: #000; outline: none;
         }
 
-        /* Информационное поле дня недели */
-        .info-field { color: #555; font-weight: 500; cursor: default; }
-
-        /* Кастомизация иконки календаря - Скругление */
-        input[type="date"] { border-radius: 10px; }
+        /* Иконка календаря увеличена в 2 раза */
         input[type="date"]::-webkit-calendar-picker-indicator {
-            font-size: 20px;
+            font-size: 32px;
             cursor: pointer;
             filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
         }
 
-        /* Всегда видимые и синие стрелочки */
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
+        /* Стрелки: Черные на белом фоне */
+        input[type="number"]::-webkit-inner-spin-button {
             opacity: 1 !important;
             height: 32px;
-            width: 24px;
-            filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
-            cursor: pointer;
-        }
-
-        /* Предупреждение */
-        #warning { 
-            display: none; 
-            background: var(--apple-orange-dark); 
-            color: white; 
-            padding: 10px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            margin-bottom: 12px; 
-            font-weight: 600; 
-            text-align: center;
-        }
-
-        /* Контейнер результата (Жирный текст) */
-        .res-container { 
-            margin-top: 12px; 
-            padding: 16px; 
+            width: 30px;
             background: #fff;
-            border-radius: 18px; 
-            border: 1px solid rgba(0,0,0,0.05); 
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            filter: none; /* Черный цвет по умолчанию */
         }
 
-        .calc-line { font-size: 14px; color: var(--text-dark); margin-bottom: 6px; line-height: 1.4; }
-        .offer-line { font-size: 14px; color: var(--apple-orange-dark); text-transform: uppercase; }
+        #warning { 
+            display: none; background: var(--apple-orange); color: white; 
+            padding: 10px; border-radius: 12px; font-size: 12px; 
+            margin-bottom: 12px; font-weight: 600; text-align: center;
+        }
 
-        .btn-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 15px; }
-        
+        .res-container { 
+            margin-top: 12px; padding: 16px; background: #fff;
+            border-radius: 18px; border: 1px solid rgba(0,0,0,0.05); 
+            min-height: 100px; display: flex; flex-direction: column; justify-content: center;
+        }
+
+        .calc-line { font-size: 14px; color: var(--text-dark); font-weight: 800; margin-bottom: 6px; }
+        .offer-line { font-size: 14px; color: var(--apple-orange); font-weight: 800; text-transform: uppercase; }
+
+        .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 15px; }
         .btn { 
             height: 46px; border: none; border-radius: 16px; cursor: pointer; 
             font-weight: 700; font-size: 13px; color: white; text-transform: uppercase;
-            transition: all 0.2s;
         }
-
-        .btn-blue { background: linear-gradient(180deg, #007AFF 0%, #0056B3 100%); }
-        .btn-orange { background: linear-gradient(180deg, var(--apple-orange-btn) 0%, #E67E22 100%); }
-        
-        .btn:active { transform: scale(0.97); }
-
-        .logo-container { margin-top: 20px; text-align: center; }
-        .logo-container img { max-width: 180px; height: auto; border: none; }
+        .btn-blue { background: #007AFF; }
+        .btn-orange { background: var(--apple-orange); }
     </style>
 </head>
 <body>
+
+    <div class="logo-container">
+        <img src="logo.png" alt="Citrus Hall">
+    </div>
 
     <div id="warning">⚠️ МИНИМУМ 3 ЧАСА В ЭТОТ ДЕНЬ</div>
 
@@ -145,8 +112,8 @@
     </div>
 
     <div class="field-group">
-        <label>День недели (авто)</label>
-        <input type="text" id="dayNameDisplay" class="info-field" readonly>
+        <label>День недели</label>
+        <input type="text" id="dayNameDisplay" readonly style="color: #555;">
     </div>
 
     <div style="display: flex; gap: 10px;">
@@ -170,10 +137,6 @@
         <button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button>
     </div>
 
-    <div class="logo-container">
-        <img src="logo.png" alt="Citrus Hall">
-    </div>
-
     <script>
         const priceList = {
             "Грейпфрут": [4000, 3000, 3700, 3700, 3700, 5000, 7500],
@@ -188,9 +151,25 @@
 
         const daysNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 
+        // Получение даты из названия сделки amoCRM
+        function getInitialDate() {
+            try {
+                let leadName = window.parent.AMOCRM.data.current_card.element.name;
+                let datePart = leadName.substring(0, 5); // "20.02"
+                if (datePart.includes('.')) {
+                    let [d, m] = datePart.split('.').map(Number);
+                    let now = new Date();
+                    let year = now.getFullYear();
+                    // Если месяц даты меньше текущего более чем на 1 месяц, считаем что это след. год
+                    if (m < (now.getMonth() + 1) - 1) year++;
+                    return `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                }
+            } catch(e) {}
+            return new Date().toISOString().split('T')[0];
+        }
+
         window.onload = function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('eventDate').value = today;
+            document.getElementById('eventDate').value = getInitialDate();
             calculate();
         };
 
@@ -198,54 +177,35 @@
             const zalName = document.getElementById('room').value;
             const dateVal = document.getElementById('eventDate').value;
             const h = Number(document.getElementById('hours').value) || 0;
-            let discInput = document.getElementById('discount').value;
-            let discPct = (discInput === "" || discInput === null) ? 10 : Number(discInput);
+            let discPct = Number(document.getElementById('discount').value) || 10;
 
             const dateObj = new Date(dateVal);
             const dayIdx = dateObj.getDay(); 
-            const dayName = daysNames[dayIdx];
-            
-            // Заполняем поле дня недели
-            document.getElementById('dayNameDisplay').value = dayName;
+            document.getElementById('dayNameDisplay').value = daysNames[dayIdx];
 
             const rate = priceList[zalName][dayIdx];
             const cleaning = (zalName === "Лайм" || zalName === "Библиотека") ? 1000 : 2000;
-            
             const baseTotal = (rate * h) + cleaning;
             const totalWithDiscount = Math.round(baseTotal * (1 - discPct / 100));
 
             const warningEl = document.getElementById('warning');
-            const isWeekend = (dayIdx === 0 || dayIdx === 5 || dayIdx === 6);
-            const minHours = isWeekend ? 5 : 3;
+            const minHours = (dayIdx === 0 || dayIdx === 5 || dayIdx === 6) ? 5 : 3;
 
-            if (h < minHours && h > 0) {
-                warningEl.style.display = 'block';
-                warningEl.innerText = `⚠️ МИНИМУМ ${minHours} ЧАСА В ЭТОТ ДЕНЬ`;
-            } else {
-                warningEl.style.display = 'none';
-            }
+            warningEl.style.display = (h < minHours && h > 0) ? 'block' : 'none';
+            if (h < minHours) warningEl.innerText = `⚠️ МИНИМУМ ${minHours} ЧАСА В ЭТОТ ДЕНЬ`;
 
             document.getElementById('calcText').innerText = `Зал ${zalName}: ${rate}р * ${h}ч + ${cleaning} (уборка) = ${baseTotal} руб`;
             document.getElementById('offerText').innerText = `ПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${discPct}% ИТОГО ${totalWithDiscount} руб`;
         }
 
         function copyText(mode) {
-            const line1 = document.getElementById('calcText').innerText;
-            const line2 = document.getElementById('offerText').innerText;
-            const textToCopy = (mode === 'no-disc') ? line1 : line1 + '\n' + line2;
-
-            const textArea = document.createElement("textarea");
-            textArea.value = textToCopy;
-            document.body.appendChild(textArea);
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                const resultBox = document.getElementById('resultBox');
-                resultBox.style.borderColor = "#007AFF";
-                setTimeout(() => { resultBox.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
-            } catch (err) { console.error(err); }
-            document.body.removeChild(textArea);
+            const t = (mode === 'no-disc') ? document.getElementById('calcText').innerText : 
+                      document.getElementById('calcText').innerText + '\n' + document.getElementById('offerText').innerText;
+            const el = document.createElement("textarea");
+            el.value = t; document.body.appendChild(el); el.select();
+            document.execCommand('copy'); document.body.removeChild(el);
+            const rb = document.getElementById('resultBox');
+            rb.style.borderColor = "#007AFF"; setTimeout(() => { rb.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
         }
     </script>
 </body>
