@@ -3,30 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        :root { --glass-bg: rgba(255, 255, 255, 0.85); --apple-blue: #007AFF; --apple-orange: #FF9500; --apple-gray: #8E8E93; --text-dark: #1d1d1f; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 10px; background: #f2f2f7; color: var(--text-dark); margin: 0; overflow: hidden; }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --apple-blue: #007AFF;
+            --apple-orange: #FF9500;
+            --apple-gray: #8E8E93;
+            --text-dark: #1d1d1f;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            padding: 10px; background: #f2f2f7; color: var(--text-dark); margin: 0; overflow: hidden; 
+        }
         .logo-container { text-align: center; margin-bottom: 10px; }
         .logo-container img { max-width: 130px; height: auto; mix-blend-mode: multiply; }
         .warning-wrapper { height: 42px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
-        #warning { display: none; width: 100%; background: var(--apple-orange); color: white; padding: 10px; border-radius: 21px; font-size: 11px; font-weight: 600; text-align: center; box-sizing: border-box; }
-        .field-group { margin-bottom: 6px; background: var(--glass-bg); backdrop-filter: blur(10px); padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.5); }
+        #warning { 
+            display: none; width: 100%; background: var(--apple-orange); color: white; 
+            padding: 10px; border-radius: 21px; font-size: 11px; font-weight: 600; text-align: center; box-sizing: border-box; 
+        }
+        .field-group { 
+            margin-bottom: 6px; background: var(--glass-bg); backdrop-filter: blur(10px); 
+            padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.5); 
+        }
         label { display: block; font-size: 9px; color: var(--apple-gray); margin-bottom: 2px; text-transform: uppercase; font-weight: 600; }
         select, input { width: 100%; height: 26px; border: none; background: transparent; font-size: 14px; color: #000; outline: none; }
-        input[type="date"]::-webkit-calendar-picker-indicator { font-size: 26px; cursor: pointer; filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%); }
+        input[type="date"]::-webkit-calendar-picker-indicator { 
+            font-size: 26px; cursor: pointer; filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%); 
+        }
         input[type="number"]::-webkit-inner-spin-button { opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px; }
-        .res-container { margin-top: 15px; margin-bottom: 15px; padding: 12px; background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); min-height: 75px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+        .res-container { 
+            margin-top: 15px; margin-bottom: 15px; padding: 12px; background: #fff; 
+            border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); min-height: 75px; 
+            display: flex; flex-direction: column; justify-content: center; text-align: center; 
+        }
         .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
         .offer-line { font-size: 13px; color: var(--apple-orange); font-weight: 800; text-transform: uppercase; }
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
-        .btn { height: 44px; border: none; border-radius: 22px; cursor: pointer; font-weight: 700; font-size: 12px; color: white; text-transform: uppercase; transition: transform 0.1s; }
+        .btn { 
+            height: 44px; border: none; border-radius: 22px; cursor: pointer; 
+            font-weight: 700; font-size: 12px; color: white; text-transform: uppercase; transition: transform 0.1s; 
+        }
         .btn-blue { background: #007AFF; }
         .btn-orange { background: var(--apple-orange); }
-        #debugInfo { margin-top: 10px; font-size: 10px; color: #888; text-align: center; line-height: 1.2; }
     </style>
 </head>
 <body>
     <div class="logo-container"><img src="logo.png" alt="Citrus Hall"></div>
     <div class="warning-wrapper"><div id="warning"></div></div>
+    
     <div class="field-group">
         <label>Зал</label>
         <select id="room" onchange="calculate()">
@@ -40,13 +64,24 @@
             <option value="Библиотека">Библиотека</option>
         </select>
     </div>
+    
     <div class="field-group"><label>Дата события</label><input type="date" id="eventDate" onchange="calculate()"></div>
     <div class="field-group"><label>День недели</label><input type="text" id="dayNameDisplay" readonly style="color: #555;"></div>
-    <div style="display: flex; gap: 8px;"><div class="field-group" style="flex: 1;"><label>Часы</label><input type="number" id="hours" value="5" min="1" oninput="calculate()"></div>
-    <div class="field-group" style="flex: 1;"><label>Скидка %</label><input type="number" id="discount" value="10" oninput="calculate()"></div></div>
-    <div class="res-container" id="resultBox"><div id="calcText" class="calc-line"></div><div id="offerText" class="offer-line"></div></div>
-    <div class="btn-group"><button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button><button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button></div>
-    <div id="debugInfo"></div>
+    
+    <div style="display: flex; gap: 8px;">
+        <div class="field-group" style="flex: 1;"><label>Часы</label><input type="number" id="hours" value="5" min="1" oninput="calculate()"></div>
+        <div class="field-group" style="flex: 1;"><label>Скидка %</label><input type="number" id="discount" value="10" oninput="calculate()"></div>
+    </div>
+    
+    <div class="res-container" id="resultBox">
+        <div id="calcText" class="calc-line"></div>
+        <div id="offerText" class="offer-line"></div>
+    </div>
+    
+    <div class="btn-group">
+        <button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button>
+        <button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button>
+    </div>
 
     <script>
         const priceList = {
@@ -71,48 +106,64 @@
             let foundDate = null;
             let foundHours = 5;
 
-            // 1. Поиск даты (ДД.ММ)
-            const dateMatch = name.match(/(\d{1,2})\.(\d{1,2})/);
+            // 1. Поиск даты (поддержка формата 19-20.03)
+            // Ищем либо ДД.ММ, либо ДД-ДД.ММ. Берем первую группу цифр перед точкой.
+            const dateMatch = name.match(/(?:(\d{1,2})-\d{1,2}|\s*(\d{1,2}))\.(\d{2})/);
             if (dateMatch) {
-                let d = parseInt(dateMatch[1]);
-                let m = parseInt(dateMatch[2]);
-                let now = new Date();
-                let year = now.getFullYear();
-                if (m < (now.getMonth() + 1)) { /* если месяц прошел, значит след. год, но для теста оставим текущий */ }
+                let d = dateMatch[1] || dateMatch[2];
+                let m = dateMatch[3];
+                let year = new Date().getFullYear();
                 foundDate = `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             }
 
-            // 2. Поиск часов (17-20, с 10 до 15, 17:00-23:00)
+            // 2. Поиск часов (поддержка перехода через полночь 20 до 00)
             const timeMatch = name.match(/(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
             if (timeMatch) {
                 let start = parseInt(timeMatch[1]);
                 let end = parseInt(timeMatch[2]);
-                if (end > start) foundHours = end - start;
+                if (end <= start) end += 24; // Если 20 до 00, то считаем как 24 - 20 = 4
+                foundHours = end - start;
             }
 
-            // Заполнение полей
             document.getElementById('eventDate').value = foundDate || new Date().toISOString().split('T')[0];
             document.getElementById('hours').value = foundHours;
-            document.getElementById('debugInfo').innerHTML = `Сделка: ${name}<br>Дата: ${foundDate || 'не найдена'}, Часы: ${foundHours}`;
-            
             calculate();
         }
 
         function calculate() {
-            const z = document.getElementById('room').value, dVal = document.getElementById('eventDate').value, h = Number(document.getElementById('hours').value) || 0, dp = Number(document.getElementById('discount').value) || 0;
+            const z = document.getElementById('room').value, 
+                  dVal = document.getElementById('eventDate').value, 
+                  h = Number(document.getElementById('hours').value) || 0, 
+                  dp = Number(document.getElementById('discount').value) || 0;
+            
             const dObj = new Date(dVal), dIdx = dObj.getDay();
             document.getElementById('dayNameDisplay').value = daysNames[dIdx] || "";
-            const rate = priceList[z][dIdx], cl = (z === "Лайм" || z === "Библиотека") ? 1000 : 2000, bt = (rate * h) + cl, td = Math.round(bt * (1 - dp/100));
+            
+            const rate = priceList[z][dIdx], 
+                  cl = (z === "Лайм" || z === "Библиотека") ? 1000 : 2000, 
+                  bt = (rate * h) + cl, 
+                  td = Math.round(bt * (1 - dp/100));
+            
             const w = document.getElementById('warning'), mh = (dIdx === 0 || dIdx === 5 || dIdx === 6) ? 5 : 3;
-            if (h < mh && h > 0) { w.style.display = 'block'; w.innerText = `⚠️ МИНИМУМ ${mh} ${mh === 5 ? 'ЧАСОВ' : 'ЧАСА'} В ЭТОТ ДЕНЬ`; } else { w.style.display = 'none'; }
+            
+            if (h < mh && h > 0) { 
+                w.style.display = 'block'; 
+                w.innerText = `⚠️ МИНИМУМ ${mh} ${mh === 5 ? 'ЧАСОВ' : 'ЧАСА'} В ЭТОТ ДЕНЬ`; 
+            } else { 
+                w.style.display = 'none'; 
+            }
+            
             document.getElementById('calcText').innerText = `Зал ${z}: ${formatPrice(rate)}р * ${h}ч + ${formatPrice(cl)} (уборка) = ${formatPrice(bt)} руб`;
             document.getElementById('offerText').innerText = `ПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${formatPrice(td)} руб`;
         }
 
         function copyText(m) {
-            const t = (m === 'no-disc') ? document.getElementById('calcText').innerText : document.getElementById('calcText').innerText + '\n' + document.getElementById('offerText').innerText;
-            const el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
-            const rb = document.getElementById('resultBox'); rb.style.borderColor = "#007AFF"; setTimeout(() => { rb.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
+            const t = (m === 'no-disc') ? document.getElementById('calcText').innerText : 
+                      document.getElementById('calcText').innerText + '\n' + document.getElementById('offerText').innerText;
+            const el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select(); 
+            document.execCommand('copy'); document.body.removeChild(el);
+            const rb = document.getElementById('resultBox'); rb.style.borderColor = "#007AFF"; 
+            setTimeout(() => { rb.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
         }
 
         window.onload = init;
