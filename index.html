@@ -13,16 +13,25 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 10px; background: #f2f2f7; color: var(--text-dark); margin: 0; overflow: hidden; }
         .logo-container { text-align: center; margin-bottom: 10px; }
         .logo-container img { max-width: 130px; height: auto; mix-blend-mode: multiply; }
+        
+        /* Полукруглый алерт */
         .warning-wrapper { height: 42px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
         #warning { display: none; width: 100%; background: var(--apple-orange); color: white; padding: 10px; border-radius: 21px; font-size: 11px; font-weight: 600; text-align: center; box-sizing: border-box; }
+        
         .field-group { margin-bottom: 6px; background: var(--glass-bg); backdrop-filter: blur(10px); padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.5); }
         label { display: block; font-size: 9px; color: var(--apple-gray); margin-bottom: 2px; text-transform: uppercase; font-weight: 600; }
         select, input { width: 100%; height: 26px; border: none; background: transparent; font-size: 14px; color: #000; outline: none; }
+        
+        /* Иконка календаря х2 */
         input[type="date"]::-webkit-calendar-picker-indicator { font-size: 26px; cursor: pointer; filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%); }
         input[type="number"]::-webkit-inner-spin-button { opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px; }
+        
+        /* Расчеты: по центру и с точками */
         .res-container { margin-top: 15px; margin-bottom: 15px; padding: 12px; background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); min-height: 75px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
         .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
         .offer-line { font-size: 13px; color: var(--apple-orange); font-weight: 800; text-transform: uppercase; }
+        
+        /* Полукруглые кнопки */
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
         .btn { height: 44px; border: none; border-radius: 22px; cursor: pointer; font-weight: 700; font-size: 12px; color: white; text-transform: uppercase; transition: transform 0.1s; }
         .btn-blue { background: #007AFF; }
@@ -32,17 +41,38 @@
 <body>
     <div class="logo-container"><img src="logo.png" alt="Citrus Hall"></div>
     <div class="warning-wrapper"><div id="warning"></div></div>
-    <div class="field-group"><label>Зал</label><select id="room" onchange="calculate()">
-        <option value="Грейпфрут">Грейпфрут</option><option value="Бергамот">Бергамот</option><option value="Помело">Помело</option>
-        <option value="Шале">Шале</option><option value="Свити">Свити</option><option value="Мандарин">Мандарин</option>
-        <option value="Лайм">Лайм</option><option value="Библиотека">Библиотека</option>
-    </select></div>
+    
+    <div class="field-group">
+        <label>Зал</label>
+        <select id="room" onchange="calculate()">
+            <option value="Грейпфрут">Грейпфрут</option>
+            <option value="Бергамот">Бергамот</option>
+            <option value="Помело">Помело</option>
+            <option value="Шале">Шале</option>
+            <option value="Свити">Свити</option>
+            <option value="Мандарин">Мандарин</option>
+            <option value="Лайм">Лайм</option>
+            <option value="Библиотека">Библиотека</option>
+        </select>
+    </div>
+    
     <div class="field-group"><label>Дата события</label><input type="date" id="eventDate" onchange="calculate()"></div>
     <div class="field-group"><label>День недели</label><input type="text" id="dayNameDisplay" readonly style="color: #555;"></div>
-    <div style="display: flex; gap: 8px;"><div class="field-group" style="flex: 1;"><label>Часы</label><input type="number" id="hours" value="5" min="1" oninput="calculate()"></div>
-    <div class="field-group" style="flex: 1;"><label>Скидка %</label><input type="number" id="discount" placeholder="10" oninput="calculate()"></div></div>
-    <div class="res-container" id="resultBox"><div id="calcText" class="calc-line"></div><div id="offerText" class="offer-line"></div></div>
-    <div class="btn-group"><button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button><button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button></div>
+    
+    <div style="display: flex; gap: 8px;">
+        <div class="field-group" style="flex: 1;"><label>Часы</label><input type="number" id="hours" value="5" min="1" oninput="calculate()"></div>
+        <div class="field-group" style="flex: 1;"><label>Скидка %</label><input type="number" id="discount" placeholder="10" oninput="calculate()"></div>
+    </div>
+    
+    <div class="res-container" id="resultBox">
+        <div id="calcText" class="calc-line"></div>
+        <div id="offerText" class="offer-line"></div>
+    </div>
+    
+    <div class="btn-group">
+        <button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button>
+        <button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button>
+    </div>
 
     <script>
         const priceList = {
@@ -62,9 +92,9 @@
         function parseUrlData() {
             let res = { date: null, hours: 5 };
             const params = new URLSearchParams(window.location.search);
-            const leadName = params.get('name');
-            if (leadName) {
-                const name = decodeURIComponent(leadName);
+            const rawName = params.get('name');
+            if (rawName) {
+                const name = decodeURIComponent(rawName);
                 let dMatch = name.match(/(\d{1,2})\.(\d{2})/);
                 if (dMatch) {
                     let d = parseInt(dMatch[1]), m = parseInt(dMatch[2]), now = new Date(), y = now.getFullYear();
