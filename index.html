@@ -31,14 +31,13 @@
             justify-content: center;
         }
 
-        /* Информационное сообщение теперь полукруглое */
         #warning { 
             display: none; 
             width: 100%;
             background: var(--apple-orange); 
             color: white; 
             padding: 10px; 
-            border-radius: 21px; /* Полукруглые края (высота wrapper ~42px) */
+            border-radius: 21px; 
             font-size: 11px; 
             font-weight: 600; 
             text-align: center;
@@ -70,13 +69,13 @@
         }
 
         input[type="number"]::-webkit-inner-spin-button {
-            opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px; cursor: pointer;
+            opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px;
         }
 
-        /* Поле с расчетами с дополнительными отступами */
+        /* Блок расчетов: Текст по центру и симметричные отступы */
         .res-container { 
-            margin-top: 15px; /* Увеличенный отступ сверху */
-            margin-bottom: 15px; /* Увеличенный отступ снизу */
+            margin-top: 15px; 
+            margin-bottom: 15px; 
             padding: 12px; 
             background: #fff;
             border-radius: 14px; 
@@ -85,6 +84,7 @@
             display: flex; 
             flex-direction: column; 
             justify-content: center;
+            text-align: center; /* Центрирование текста */
         }
 
         .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
@@ -93,14 +93,22 @@
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
         .btn { 
             height: 44px; border: none; 
-            border-radius: 22px; /* Идеально полукруглые края */
+            border-radius: 22px; 
             cursor: pointer; 
             font-weight: 700; font-size: 12px; color: white; text-transform: uppercase;
-            transition: transform 0.1s;
         }
         .btn-blue { background: #007AFF; }
         .btn-orange { background: var(--apple-orange); }
-        .btn:active { transform: scale(0.98); }
+
+        /* Поле теста названия сделки */
+        #debugName {
+            margin-top: 10px;
+            font-size: 9px;
+            color: var(--apple-gray);
+            text-align: center;
+            word-break: break-all;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -158,6 +166,8 @@
         <button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button>
     </div>
 
+    <div id="debugName">Название сделки: не определено</div>
+
     <script>
         const priceList = {
             "Грейпфрут": [4000, 3000, 3700, 3700, 3700, 5000, 7500],
@@ -177,11 +187,14 @@
         }
 
         function parseLeadData() {
-            let data = { date: null, hours: 5 };
+            let data = { date: null, hours: 5, rawName: "не найдено" };
             try {
                 let leadName = "";
-                if (window.parent && window.parent.AMOCRM && window.parent.AMOCRM.data && window.parent.AMOCRM.data.current_card) {
-                    leadName = window.parent.AMOCRM.data.current_card.element.name;
+                // Проверка через несколько уровней вложенности
+                const win = window.parent;
+                if (win && win.AMOCRM && win.AMOCRM.data && win.AMOCRM.data.current_card) {
+                    leadName = win.AMOCRM.data.current_card.element.name;
+                    data.rawName = leadName;
                 }
 
                 if (leadName) {
@@ -203,13 +216,17 @@
                         if (end > start) data.hours = end - start;
                     }
                 }
-            } catch(e) {}
+            } catch(e) { data.rawName = "ошибка доступа"; }
             return data;
         }
 
         window.onload = function() {
             let parsed = parseLeadData();
-            document.getElementById('eventDate').value = parsed.date || new Date().toISOString().split('T')[0];
+            document.getElementById('debugName').innerText = "Название сделки: " + parsed.rawName;
+            
+            if (parsed.date) document.getElementById('eventDate').value = parsed.date;
+            else document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
+            
             document.getElementById('hours').value = parsed.hours;
             calculate();
         };
