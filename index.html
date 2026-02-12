@@ -101,27 +101,35 @@
         function init() {
             const params = new URLSearchParams(window.location.search);
             const rawName = params.get('name') || "";
-            const name = decodeURIComponent(rawName);
+            let name = decodeURIComponent(rawName);
             
             let foundDate = null;
             let foundHours = 5;
 
-            // 1. Поиск даты (поддержка формата 19-20.03)
-            // Ищем либо ДД.ММ, либо ДД-ДД.ММ. Берем первую группу цифр перед точкой.
-            const dateMatch = name.match(/(?:(\d{1,2})-\d{1,2}|\s*(\d{1,2}))\.(\d{2})/);
+            // 1. Ищем ДАТУ и удаляем её из временной строки, чтобы не путать с часами
+            // Паттерн ищет "19-20.03" или "09.03"
+            const dateRegex = /(\d{1,2}(?:-\d{1,2})?)\.(\d{2})/;
+            const dateMatch = name.match(dateRegex);
+            
             if (dateMatch) {
-                let d = dateMatch[1] || dateMatch[2];
-                let m = dateMatch[3];
+                // Извлекаем первое число дня (из 19-20 берем 19)
+                let dayPart = dateMatch[1].split('-')[0];
+                let monthPart = dateMatch[2];
                 let year = new Date().getFullYear();
-                foundDate = `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                foundDate = `${year}-${monthPart.padStart(2, '0')}-${dayPart.padStart(2, '0')}`;
+                
+                // Удаляем найденную дату из строки поиска для часов
+                name = name.replace(dateRegex, 'DATE_STUB');
             }
 
-            // 2. Поиск часов (поддержка перехода через полночь 20 до 00)
-            const timeMatch = name.match(/(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
+            // 2. Ищем ЧАСЫ в оставшейся строке
+            const timeMatch = name.match(/(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
             if (timeMatch) {
-                let start = parseInt(timeMatch[1]);
-                let end = parseInt(timeMatch[2]);
-                if (end <= start) end += 24; // Если 20 до 00, то считаем как 24 - 20 = 4
+                let start = parseInt(timeMatch[1], 10);
+                let end = parseInt(timeMatch[2], 10);
+                
+                // Переход через полночь
+                if (end <= start && end < 12) end += 24; 
                 foundHours = end - start;
             }
 
