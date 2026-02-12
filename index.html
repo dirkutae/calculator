@@ -27,7 +27,6 @@
         .btn { height: 44px; border: none; border-radius: 22px; cursor: pointer; font-weight: 700; font-size: 12px; color: white; text-transform: uppercase; transition: transform 0.1s; }
         .btn-blue { background: #007AFF; }
         .btn-orange { background: var(--apple-orange); }
-        #debugName { margin-top: 10px; font-size: 9px; color: var(--apple-gray); text-align: center; opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -44,7 +43,6 @@
     <div class="field-group" style="flex: 1;"><label>Скидка %</label><input type="number" id="discount" placeholder="10" oninput="calculate()"></div></div>
     <div class="res-container" id="resultBox"><div id="calcText" class="calc-line"></div><div id="offerText" class="offer-line"></div></div>
     <div class="btn-group"><button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button><button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button></div>
-    <div id="debugName">Название сделки: поиск...</div>
 
     <script>
         const priceList = {
@@ -62,34 +60,28 @@
         function formatPrice(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
         function parseUrlData() {
-            let res = { date: null, hours: 5, name: "не найдено" };
-            try {
-                // Читаем название из параметров URL
-                const params = new URLSearchParams(window.location.search);
-                const leadName = params.get('name');
-                
-                if (leadName) {
-                    res.name = decodeURIComponent(leadName);
-                    
-                    let dMatch = res.name.match(/(\d{1,2})\.(\d{2})/);
-                    if (dMatch) {
-                        let d = parseInt(dMatch[1]), m = parseInt(dMatch[2]), now = new Date(), y = now.getFullYear();
-                        if (m < (now.getMonth() + 1) - 1) y++;
-                        res.date = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                    }
-                    let tMatch = res.name.match(/(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
-                    if (tMatch) {
-                        let s = parseInt(tMatch[1]), e = parseInt(tMatch[2]);
-                        if (e > s) res.hours = e - s;
-                    }
+            let res = { date: null, hours: 5 };
+            const params = new URLSearchParams(window.location.search);
+            const leadName = params.get('name');
+            if (leadName) {
+                const name = decodeURIComponent(leadName);
+                let dMatch = name.match(/(\d{1,2})\.(\d{2})/);
+                if (dMatch) {
+                    let d = parseInt(dMatch[1]), m = parseInt(dMatch[2]), now = new Date(), y = now.getFullYear();
+                    if (m < (now.getMonth() + 1) - 1) y++;
+                    res.date = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                 }
-            } catch(e) { res.name = "ошибка разбора URL"; }
+                let tMatch = name.match(/(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
+                if (tMatch) {
+                    let s = parseInt(tMatch[1]), e = parseInt(tMatch[2]);
+                    if (e > s) res.hours = e - s;
+                }
+            }
             return res;
         }
 
         window.onload = function() {
             let p = parseUrlData();
-            document.getElementById('debugName').innerText = "Название: " + p.name;
             document.getElementById('eventDate').value = p.date || new Date().toISOString().split('T')[0];
             document.getElementById('hours').value = p.hours;
             calculate();
