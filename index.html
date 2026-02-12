@@ -61,13 +61,15 @@
 
         function formatPrice(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-        function parseLeadData() {
+        function parseUrlData() {
             let res = { date: null, hours: 5, name: "не найдено" };
             try {
-                // Попытка прямого доступа к AMOCRM через родителя
-                const amo = window.parent.AMOCRM || window.top.AMOCRM;
-                if (amo && amo.data && amo.data.current_card) {
-                    res.name = amo.data.current_card.element.name;
+                // Читаем название из параметров URL
+                const params = new URLSearchParams(window.location.search);
+                const leadName = params.get('name');
+                
+                if (leadName) {
+                    res.name = decodeURIComponent(leadName);
                     
                     let dMatch = res.name.match(/(\d{1,2})\.(\d{2})/);
                     if (dMatch) {
@@ -81,12 +83,12 @@
                         if (e > s) res.hours = e - s;
                     }
                 }
-            } catch(e) { res.name = "ошибка CORS / доступа"; }
+            } catch(e) { res.name = "ошибка разбора URL"; }
             return res;
         }
 
         window.onload = function() {
-            let p = parseLeadData();
+            let p = parseUrlData();
             document.getElementById('debugName').innerText = "Название: " + p.name;
             document.getElementById('eventDate').value = p.date || new Date().toISOString().split('T')[0];
             document.getElementById('hours').value = p.hours;
