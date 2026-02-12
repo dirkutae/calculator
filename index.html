@@ -10,163 +10,41 @@
             --apple-gray: #8E8E93;
             --text-dark: #1d1d1f;
         }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            padding: 10px; 
-            background: #f2f2f7; 
-            color: var(--text-dark); 
-            margin: 0;
-            overflow: hidden;
-        }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 10px; background: #f2f2f7; color: var(--text-dark); margin: 0; overflow: hidden; }
         .logo-container { text-align: center; margin-bottom: 10px; }
         .logo-container img { max-width: 130px; height: auto; mix-blend-mode: multiply; }
-
-        .warning-wrapper {
-            height: 42px; 
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #warning { 
-            display: none; 
-            width: 100%;
-            background: var(--apple-orange); 
-            color: white; 
-            padding: 10px; 
-            border-radius: 21px; 
-            font-size: 11px; 
-            font-weight: 600; 
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .field-group { 
-            margin-bottom: 6px; 
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            padding: 6px 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        label { 
-            display: block; font-size: 9px; color: var(--apple-gray); 
-            margin-bottom: 2px; text-transform: uppercase; font-weight: 600; 
-        }
-
-        select, input { 
-            width: 100%; height: 26px; border: none; background: transparent;
-            font-size: 14px; color: #000; outline: none;
-        }
-
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            font-size: 26px; cursor: pointer;
-            filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
-        }
-
-        input[type="number"]::-webkit-inner-spin-button {
-            opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px;
-        }
-
-        /* Блок расчетов: Текст по центру и симметричные отступы */
-        .res-container { 
-            margin-top: 15px; 
-            margin-bottom: 15px; 
-            padding: 12px; 
-            background: #fff;
-            border-radius: 14px; 
-            border: 1px solid rgba(0,0,0,0.05); 
-            min-height: 75px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
-            text-align: center; /* Центрирование текста */
-        }
-
+        .warning-wrapper { height: 42px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
+        #warning { display: none; width: 100%; background: var(--apple-orange); color: white; padding: 10px; border-radius: 21px; font-size: 11px; font-weight: 600; text-align: center; box-sizing: border-box; }
+        .field-group { margin-bottom: 6px; background: var(--glass-bg); backdrop-filter: blur(10px); padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.5); }
+        label { display: block; font-size: 9px; color: var(--apple-gray); margin-bottom: 2px; text-transform: uppercase; font-weight: 600; }
+        select, input { width: 100%; height: 26px; border: none; background: transparent; font-size: 14px; color: #000; outline: none; }
+        input[type="date"]::-webkit-calendar-picker-indicator { font-size: 26px; cursor: pointer; filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%); }
+        input[type="number"]::-webkit-inner-spin-button { opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px; }
+        .res-container { margin-top: 15px; margin-bottom: 15px; padding: 12px; background: #fff; border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); min-height: 75px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
         .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
         .offer-line { font-size: 13px; color: var(--apple-orange); font-weight: 800; text-transform: uppercase; }
-
         .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
-        .btn { 
-            height: 44px; border: none; 
-            border-radius: 22px; 
-            cursor: pointer; 
-            font-weight: 700; font-size: 12px; color: white; text-transform: uppercase;
-        }
+        .btn { height: 44px; border: none; border-radius: 22px; cursor: pointer; font-weight: 700; font-size: 12px; color: white; text-transform: uppercase; transition: transform 0.1s; }
         .btn-blue { background: #007AFF; }
         .btn-orange { background: var(--apple-orange); }
-
-        /* Поле теста названия сделки */
-        #debugName {
-            margin-top: 10px;
-            font-size: 9px;
-            color: var(--apple-gray);
-            text-align: center;
-            word-break: break-all;
-            opacity: 0.7;
-        }
+        #debugName { margin-top: 10px; font-size: 9px; color: var(--apple-gray); text-align: center; opacity: 0.7; }
     </style>
 </head>
 <body>
-
-    <div class="logo-container">
-        <img src="logo.png" alt="Citrus Hall">
-    </div>
-
-    <div class="warning-wrapper">
-        <div id="warning">⚠️ МИНИМУМ 3 ЧАСА В ЭТОТ ДЕНЬ</div>
-    </div>
-
-    <div class="field-group">
-        <label>Зал</label>
-        <select id="room" onchange="calculate()">
-            <option value="Грейпфрут">Грейпфрут</option>
-            <option value="Бергамот">Бергамот</option>
-            <option value="Помело">Помело</option>
-            <option value="Шале">Шале</option>
-            <option value="Свити">Свити</option>
-            <option value="Мандарин">Мандарин</option>
-            <option value="Лайм">Лайм</option>
-            <option value="Библиотека">Библиотека</option>
-        </select>
-    </div>
-
-    <div class="field-group">
-        <label>Дата события</label>
-        <input type="date" id="eventDate" onchange="calculate()">
-    </div>
-
-    <div class="field-group">
-        <label>День недели</label>
-        <input type="text" id="dayNameDisplay" readonly style="color: #555;">
-    </div>
-
-    <div style="display: flex; gap: 8px;">
-        <div class="field-group" style="flex: 1;">
-            <label>Часы</label>
-            <input type="number" id="hours" value="5" min="1" oninput="calculate()">
-        </div>
-        <div class="field-group" style="flex: 1;">
-            <label>Скидка %</label>
-            <input type="number" id="discount" placeholder="10" oninput="calculate()">
-        </div>
-    </div>
-
-    <div class="res-container" id="resultBox">
-        <div id="calcText" class="calc-line"></div>
-        <div id="offerText" class="offer-line"></div>
-    </div>
-
-    <div class="btn-group">
-        <button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button>
-        <button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button>
-    </div>
-
-    <div id="debugName">Название сделки: не определено</div>
+    <div class="logo-container"><img src="logo.png" alt="Citrus Hall"></div>
+    <div class="warning-wrapper"><div id="warning"></div></div>
+    <div class="field-group"><label>Зал</label><select id="room" onchange="calculate()">
+        <option value="Грейпфрут">Грейпфрут</option><option value="Бергамот">Бергамот</option><option value="Помело">Помело</option>
+        <option value="Шале">Шале</option><option value="Свити">Свити</option><option value="Мандарин">Мандарин</option>
+        <option value="Лайм">Лайм</option><option value="Библиотека">Библиотека</option>
+    </select></div>
+    <div class="field-group"><label>Дата события</label><input type="date" id="eventDate" onchange="calculate()"></div>
+    <div class="field-group"><label>День недели</label><input type="text" id="dayNameDisplay" readonly style="color: #555;"></div>
+    <div style="display: flex; gap: 8px;"><div class="field-group" style="flex: 1;"><label>Часы</label><input type="number" id="hours" value="5" min="1" oninput="calculate()"></div>
+    <div class="field-group" style="flex: 1;"><label>Скидка %</label><input type="number" id="discount" placeholder="10" oninput="calculate()"></div></div>
+    <div class="res-container" id="resultBox"><div id="calcText" class="calc-line"></div><div id="offerText" class="offer-line"></div></div>
+    <div class="btn-group"><button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button><button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button></div>
+    <div id="debugName">Название сделки: поиск...</div>
 
     <script>
         const priceList = {
@@ -179,94 +57,57 @@
             "Лайм":      [2000, 1000, 1000, 1000, 1000, 2000, 2000],
             "Библиотека":[2000, 1000, 1000, 1000, 1000, 2000, 2000]
         };
-
         const daysNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
 
-        function formatPrice(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
+        function formatPrice(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
         function parseLeadData() {
-            let data = { date: null, hours: 5, rawName: "не найдено" };
+            let res = { date: null, hours: 5, name: "не найдено" };
             try {
-                let leadName = "";
-                // Проверка через несколько уровней вложенности
-                const win = window.parent;
-                if (win && win.AMOCRM && win.AMOCRM.data && win.AMOCRM.data.current_card) {
-                    leadName = win.AMOCRM.data.current_card.element.name;
-                    data.rawName = leadName;
-                }
-
-                if (leadName) {
-                    let dateMatch = leadName.match(/(\d{1,2})\.(\d{2})/);
-                    if (dateMatch) {
-                        let d = parseInt(dateMatch[1]);
-                        let m = parseInt(dateMatch[2]);
-                        let now = new Date();
-                        let year = now.getFullYear();
-                        if (m < (now.getMonth() + 1) - 1) year++;
-                        data.date = `${year}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                // Попытка прямого доступа к AMOCRM через родителя
+                const amo = window.parent.AMOCRM || window.top.AMOCRM;
+                if (amo && amo.data && amo.data.current_card) {
+                    res.name = amo.data.current_card.element.name;
+                    
+                    let dMatch = res.name.match(/(\d{1,2})\.(\d{2})/);
+                    if (dMatch) {
+                        let d = parseInt(dMatch[1]), m = parseInt(dMatch[2]), now = new Date(), y = now.getFullYear();
+                        if (m < (now.getMonth() + 1) - 1) y++;
+                        res.date = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                     }
-
-                    let timeReg = /(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i;
-                    let timeMatch = leadName.match(timeReg);
-                    if (timeMatch) {
-                        let start = parseInt(timeMatch[1]);
-                        let end = parseInt(timeMatch[2]);
-                        if (end > start) data.hours = end - start;
+                    let tMatch = res.name.match(/(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
+                    if (tMatch) {
+                        let s = parseInt(tMatch[1]), e = parseInt(tMatch[2]);
+                        if (e > s) res.hours = e - s;
                     }
                 }
-            } catch(e) { data.rawName = "ошибка доступа"; }
-            return data;
+            } catch(e) { res.name = "ошибка CORS / доступа"; }
+            return res;
         }
 
         window.onload = function() {
-            let parsed = parseLeadData();
-            document.getElementById('debugName').innerText = "Название сделки: " + parsed.rawName;
-            
-            if (parsed.date) document.getElementById('eventDate').value = parsed.date;
-            else document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
-            
-            document.getElementById('hours').value = parsed.hours;
+            let p = parseLeadData();
+            document.getElementById('debugName').innerText = "Название: " + p.name;
+            document.getElementById('eventDate').value = p.date || new Date().toISOString().split('T')[0];
+            document.getElementById('hours').value = p.hours;
             calculate();
         };
 
         function calculate() {
-            const zalName = document.getElementById('room').value;
-            const dateVal = document.getElementById('eventDate').value;
-            const h = Number(document.getElementById('hours').value) || 0;
-            let discPct = Number(document.getElementById('discount').value) || 10;
-
-            const dateObj = new Date(dateVal);
-            const dayIdx = dateObj.getDay(); 
-            document.getElementById('dayNameDisplay').value = daysNames[dayIdx];
-
-            const rate = priceList[zalName][dayIdx];
-            const cleaning = (zalName === "Лайм" || zalName === "Библиотека") ? 1000 : 2000;
-            const baseTotal = (rate * h) + cleaning;
-            const totalWithDiscount = Math.round(baseTotal * (1 - discPct / 100));
-
-            const warningEl = document.getElementById('warning');
-            const minHours = (dayIdx === 0 || dayIdx === 5 || dayIdx === 6) ? 5 : 3;
-
-            warningEl.style.display = (h < minHours && h > 0) ? 'block' : 'none';
-            if (h < minHours) {
-                let word = minHours === 5 ? "ЧАСОВ" : "ЧАСА";
-                warningEl.innerText = `⚠️ МИНИМУМ ${minHours} ${word} В ЭТОТ ДЕНЬ`;
-            }
-
-            document.getElementById('calcText').innerText = `Зал ${zalName}: ${formatPrice(rate)}р * ${h}ч + ${formatPrice(cleaning)} (уборка) = ${formatPrice(baseTotal)} руб`;
-            document.getElementById('offerText').innerText = `ПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${discPct}% ИТОГО ${formatPrice(totalWithDiscount)} руб`;
+            const z = document.getElementById('room').value, dVal = document.getElementById('eventDate').value, h = Number(document.getElementById('hours').value) || 0, dp = Number(document.getElementById('discount').value) || 10;
+            const dObj = new Date(dVal), dIdx = dObj.getDay();
+            document.getElementById('dayNameDisplay').value = daysNames[dIdx];
+            const rate = priceList[z][dIdx], cl = (z === "Лайм" || z === "Библиотека") ? 1000 : 2000, bt = (rate * h) + cl, td = Math.round(bt * (1 - dp/100));
+            const w = document.getElementById('warning'), mh = (dIdx === 0 || dIdx === 5 || dIdx === 6) ? 5 : 3;
+            if (h < mh && h > 0) { w.style.display = 'block'; w.innerText = `⚠️ МИНИМУМ ${mh} ${mh === 5 ? 'ЧАСОВ' : 'ЧАСА'} В ЭТОТ ДЕНЬ`; } else { w.style.display = 'none'; }
+            document.getElementById('calcText').innerText = `Зал ${z}: ${formatPrice(rate)}р * ${h}ч + ${formatPrice(cl)} (уборка) = ${formatPrice(bt)} руб`;
+            document.getElementById('offerText').innerText = `ПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${formatPrice(td)} руб`;
         }
 
-        function copyText(mode) {
-            const t = (mode === 'no-disc') ? document.getElementById('calcText').innerText : 
-                      document.getElementById('calcText').innerText + '\n' + document.getElementById('offerText').innerText;
-            const el = document.createElement("textarea");
-            el.value = t; document.body.appendChild(el); el.select();
-            document.execCommand('copy'); document.body.removeChild(el);
-            const rb = document.getElementById('resultBox');
-            rb.style.borderColor = "#007AFF"; setTimeout(() => { rb.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
+        function copyText(m) {
+            const t = (m === 'no-disc') ? document.getElementById('calcText').innerText : document.getElementById('calcText').innerText + '\n' + document.getElementById('offerText').innerText;
+            const el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+            const rb = document.getElementById('resultBox'); rb.style.borderColor = "#007AFF"; setTimeout(() => { rb.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
         }
     </script>
 </body>
