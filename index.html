@@ -14,6 +14,7 @@
             --border: rgba(0,0,0,0.07);
             --row-h: 42px;
             --row-gap: 5px;
+            --col-gap: 28px;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -31,18 +32,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 12px 20px 8px;
+            padding: 16px 20px 12px;
             flex-shrink: 0;
         }
-        .header img { height: 26px; mix-blend-mode: multiply; }
+        .header img { height: 52px; mix-blend-mode: multiply; }
 
-        /* MAIN LAYOUT */
+        /* MAIN LAYOUT — two columns */
         .layout {
             display: flex;
-            gap: 14px;
-            padding: 0 16px 16px;
-            flex: 1;
-            min-height: 0;
+            gap: var(--col-gap);
+            padding: 0 20px;
+            flex-shrink: 0;
         }
 
         /* LEFT PANEL */
@@ -54,7 +54,6 @@
             gap: var(--row-gap);
         }
 
-        /* Unified row height for ALL panels & inputs */
         .field-group,
         .sum-check-row {
             height: var(--row-h);
@@ -140,53 +139,13 @@
         }
         .warning-box.visible { display: flex; }
 
-        .spacer { flex: 1; min-height: 0; }
-
-        /* COPY BUTTON */
-        .btn-copy {
-            height: 44px;
-            border: none;
-            border-radius: 22px;
-            background: var(--blue);
-            color: #fff;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            cursor: pointer;
-            transition: opacity 0.15s, background 0.2s;
-        }
-        .btn-copy:hover { opacity: 0.88; }
-        .btn-copy:active { opacity: 0.72; }
-        .btn-copy.flash { background: #34C759; }
-
         /* RIGHT PANEL */
         .right-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 0;
-            gap: 0;
-        }
-
-        .table-head {
-            display: grid;
-            grid-template-columns: 18px 1fr 92px 100px;
-            gap: 0 10px;
-            padding: 0 14px 5px;
-            font-size: 9px;
-            font-weight: 700;
-            color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            flex-shrink: 0;
-        }
-
-        .rooms-list {
-            display: flex;
-            flex-direction: column;
             gap: var(--row-gap);
-            overflow: hidden;
+            min-height: 0;
         }
 
         .room-row {
@@ -194,8 +153,8 @@
             border-radius: 12px;
             border: 1.5px solid var(--border);
             display: grid;
-            grid-template-columns: 18px 1fr 92px 100px;
-            gap: 0 10px;
+            grid-template-columns: 18px 1fr 96px 100px;
+            gap: 0 12px;
             align-items: center;
             padding: 0 14px;
             cursor: pointer;
@@ -225,34 +184,65 @@
             color: var(--orange); text-align: right;
         }
 
-        /* TOTAL ROW */
-        .total-row {
-            background: var(--text);
-            border-radius: 12px;
-            display: none;
-            grid-template-columns: 18px 1fr 92px 100px;
-            gap: 0 10px;
-            align-items: center;
-            padding: 0 14px;
-            margin-top: var(--row-gap);
-            height: var(--row-h);
+        /* PREVIEW BLOCK */
+        .preview-wrap {
+            padding: 14px 20px 0;
             flex-shrink: 0;
         }
-        .total-row.visible { display: grid; }
-        .total-label {
-            font-size: 11px; font-weight: 700;
-            color: rgba(255,255,255,0.7);
+        .preview {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 16px;
+            height: 122px;
+            overflow-y: auto;
+            font-size: 11.5px;
+            line-height: 1.55;
+            color: var(--text);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .preview::-webkit-scrollbar { width: 4px; }
+        .preview::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+        .preview-empty {
+            color: var(--gray);
+            font-style: italic;
+            font-size: 11.5px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            margin: 0;
+        }
+        .preview .line-disc { color: var(--orange); font-weight: 600; }
+        .preview .line-total { font-weight: 700; }
+
+        /* BUTTONS */
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 12px 20px 18px;
+            flex-shrink: 0;
+        }
+        .btn {
+            height: 44px;
+            border: none;
+            border-radius: 22px;
+            color: #fff;
+            font-size: 11.5px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            transition: opacity 0.15s, background 0.2s;
         }
-        .total-base {
-            font-size: 14px; font-weight: 800;
-            color: #fff; text-align: right;
-        }
-        .total-disc {
-            font-size: 14px; font-weight: 800;
-            color: var(--orange); text-align: right;
-        }
+        .btn:hover { opacity: 0.88; }
+        .btn:active { opacity: 0.72; }
+        .btn-blue { background: var(--blue); }
+        .btn-orange { background: var(--orange); }
+        .btn.flash { background: #34C759 !important; }
     </style>
 </head>
 <body>
@@ -290,31 +280,22 @@
         </label>
 
         <div class="warning-box" id="warning"></div>
-
-        <div class="spacer"></div>
-
-        <button class="btn-copy" id="copyBtn" onclick="copySelected()">Скопировать выбранное</button>
     </div>
 
-    <!-- RIGHT: price table -->
-    <div class="right-panel">
-        <div class="table-head">
-            <span></span>
-            <span>Зал</span>
-            <span style="text-align:right">Итого</span>
-            <span style="text-align:right">Со скидкой</span>
-        </div>
+    <!-- RIGHT: rooms -->
+    <div class="right-panel" id="roomsList"></div>
 
-        <div class="rooms-list" id="roomsList"></div>
+</div>
 
-        <div class="total-row" id="totalRow">
-            <span></span>
-            <span class="total-label">Итого</span>
-            <span class="total-base" id="totalBase">—</span>
-            <span class="total-disc" id="totalDisc">—</span>
-        </div>
-    </div>
+<!-- PREVIEW -->
+<div class="preview-wrap">
+    <div class="preview" id="preview"></div>
+</div>
 
+<!-- BUTTONS -->
+<div class="buttons">
+    <button class="btn btn-blue"   id="btnBase" onclick="copyOutput(false)">Скопировать расчет</button>
+    <button class="btn btn-orange" id="btnDisc" onclick="copyOutput(true)">Скопировать со скидкой</button>
 </div>
 
 <script>
@@ -356,14 +337,95 @@ function toggleRoom(room) {
     const chk = document.getElementById('chk-' + room);
     chk.checked = !chk.checked;
     document.getElementById('row-' + room).classList.toggle('checked', chk.checked);
-    updateTotal();
+    renderPreview();
 }
 
 function onTotalToggle() {
     const chk = document.getElementById('showTotal');
-    document.getElementById('totalRow').classList.toggle('visible', chk.checked);
     document.getElementById('sumCheckRow').classList.toggle('checked', chk.checked);
-    updateTotal();
+    renderPreview();
+}
+
+function getState() {
+    const dVal = document.getElementById('eventDate').value;
+    const h = Number(document.getElementById('hours').value) || 0;
+    const dp = Number(document.getElementById('discount').value) || 0;
+    const dIdx = dVal ? new Date(dVal).getDay() : 0;
+    const showTotal = document.getElementById('showTotal').checked;
+    const selected = ROOMS.filter(r => {
+        const chk = document.getElementById('chk-' + r);
+        return chk && chk.checked;
+    });
+    return { dVal, h, dp, dIdx, showTotal, selected };
+}
+
+/**
+ * Builds output as array of { text, isDiscount, isTotal } segments.
+ * withDiscount = true → includes discount lines.
+ */
+function buildSegments(withDiscount) {
+    const { h, dp, dIdx, showTotal, selected } = getState();
+    if (!selected.length) return [];
+    const useTotal = showTotal && selected.length > 1;
+    const out = [];
+
+    if (useTotal) {
+        // Base lines only per room
+        selected.forEach((room, i) => {
+            const rate = PRICES[room][dIdx];
+            const cl = CLEAN[room] || 2000;
+            const base = rate * h + cl;
+            out.push({ text: `Зал ${room}: ${fmt(rate)}р * ${h}ч + ${fmt(cl)} (уборка) = ${fmt(base)} руб` });
+        });
+
+        const sumBase = selected.reduce((s, room) => {
+            const rate = PRICES[room][dIdx];
+            const cl = CLEAN[room] || 2000;
+            return s + rate * h + cl;
+        }, 0);
+
+        out.push({ text: '', spacer: true });
+        out.push({ text: `ИТОГО: ${fmt(sumBase)} руб`, isTotal: true });
+
+        if (withDiscount) {
+            const sumDisc = Math.round(sumBase * (1 - dp / 100));
+            out.push({ text: '', spacer: true });
+            out.push({ text: `ПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${fmt(sumDisc)} РУБ`, isDiscount: true });
+        }
+    } else {
+        selected.forEach((room, i) => {
+            if (i > 0) out.push({ text: '', spacer: true });
+            const rate = PRICES[room][dIdx];
+            const cl = CLEAN[room] || 2000;
+            const base = rate * h + cl;
+            out.push({ text: `Зал ${room}: ${fmt(rate)}р * ${h}ч + ${fmt(cl)} (уборка) = ${fmt(base)} руб` });
+            if (withDiscount) {
+                const disc = Math.round(base * (1 - dp / 100));
+                out.push({ text: `ПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${fmt(disc)} РУБ`, isDiscount: true });
+            }
+        });
+    }
+    return out;
+}
+
+function segmentsToText(segments) {
+    return segments.map(s => s.text).join('\n');
+}
+
+function renderPreview() {
+    const preview = document.getElementById('preview');
+    const segments = buildSegments(true); // preview shows со скидкой
+    if (!segments.length) {
+        preview.innerHTML = '<div class="preview-empty">Выберите залы — здесь появится текст для копирования</div>';
+        return;
+    }
+    const html = segments.map(s => {
+        if (s.spacer) return '';
+        const cls = s.isDiscount ? 'line-disc' : (s.isTotal ? 'line-total' : '');
+        const esc = s.text.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+        return cls ? `<span class="${cls}">${esc}</span>` : esc;
+    }).join('\n');
+    preview.innerHTML = html;
 }
 
 function calculate() {
@@ -394,95 +456,31 @@ function calculate() {
         document.getElementById('disc-' + room).textContent = fmt(disc) + ' руб';
     });
 
-    updateTotal();
+    renderPreview();
 }
 
-function updateTotal() {
-    const dVal = document.getElementById('eventDate').value;
-    const h = Number(document.getElementById('hours').value) || 0;
-    const dp = Number(document.getElementById('discount').value) || 0;
-    if (!dVal) return;
+function copyOutput(withDiscount) {
+    const segments = buildSegments(withDiscount);
+    const btn = document.getElementById(withDiscount ? 'btnDisc' : 'btnBase');
+    const origLabel = withDiscount ? 'Скопировать со скидкой' : 'Скопировать расчет';
 
-    const dIdx = new Date(dVal).getDay();
-    let sumBase = 0, sumDisc = 0;
-
-    ROOMS.forEach(room => {
-        const chk = document.getElementById('chk-' + room);
-        if (chk && chk.checked) {
-            const rate = PRICES[room][dIdx];
-            const cl = CLEAN[room] || 2000;
-            const base = rate * h + cl;
-            sumBase += base;
-            sumDisc += Math.round(base * (1 - dp / 100));
-        }
-    });
-
-    document.getElementById('totalBase').textContent = fmt(sumBase) + ' руб';
-    document.getElementById('totalDisc').textContent = fmt(sumDisc) + ' руб';
-}
-
-function copySelected() {
-    const dVal = document.getElementById('eventDate').value;
-    const h = Number(document.getElementById('hours').value) || 0;
-    const dp = Number(document.getElementById('discount').value) || 0;
-    const dIdx = dVal ? new Date(dVal).getDay() : 0;
-    const showTotal = document.getElementById('showTotal').checked;
-
-    const selected = ROOMS.filter(r => {
-        const chk = document.getElementById('chk-' + r);
-        return chk && chk.checked;
-    });
-
-    if (!selected.length) {
-        const btn = document.getElementById('copyBtn');
-        const orig = btn.textContent;
+    if (!segments.length) {
         btn.textContent = 'Выберите залы →';
-        setTimeout(() => { btn.textContent = orig; }, 1500);
+        setTimeout(() => { btn.textContent = origLabel; }, 1500);
         return;
     }
 
-    let text = '';
-    const useTotal = showTotal && selected.length > 1;
-
-    if (useTotal) {
-        const blocks = selected.map(room => {
-            const rate = PRICES[room][dIdx];
-            const cl = CLEAN[room] || 2000;
-            const base = rate * h + cl;
-            return `Зал ${room}: ${fmt(rate)}р * ${h}ч + ${fmt(cl)} (уборка) = ${fmt(base)} руб`;
-        });
-        const sumBase = selected.reduce((s, room) => {
-            const rate = PRICES[room][dIdx];
-            const cl = CLEAN[room] || 2000;
-            return s + rate * h + cl;
-        }, 0);
-        const sumDisc = Math.round(sumBase * (1 - dp / 100));
-
-        text = blocks.join('\n') +
-               `\n\nИТОГО: ${fmt(sumBase)} руб` +
-               `\nПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${fmt(sumDisc)} РУБ`;
-    } else {
-        const blocks = selected.map(room => {
-            const rate = PRICES[room][dIdx];
-            const cl = CLEAN[room] || 2000;
-            const base = rate * h + cl;
-            const disc = Math.round(base * (1 - dp / 100));
-            return `Зал ${room}: ${fmt(rate)}р * ${h}ч + ${fmt(cl)} (уборка) = ${fmt(base)} руб\nПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${fmt(disc)} РУБ`;
-        });
-        text = blocks.join('\n\n');
-    }
-
+    const text = segmentsToText(segments);
     navigator.clipboard.writeText(text).catch(() => {
         const el = document.createElement('textarea');
         el.value = text; document.body.appendChild(el); el.select();
         document.execCommand('copy'); document.body.removeChild(el);
     });
 
-    const btn = document.getElementById('copyBtn');
     btn.textContent = '✓ Скопировано';
     btn.classList.add('flash');
     setTimeout(() => {
-        btn.textContent = 'Скопировать выбранное';
+        btn.textContent = origLabel;
         btn.classList.remove('flash');
     }, 1400);
 }
