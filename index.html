@@ -2,179 +2,525 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.85);
-            --apple-blue: #007AFF;
-            --apple-orange: #FF9500;
-            --apple-gray: #8E8E93;
-            --text-dark: #1d1d1f;
+            --blue: #007AFF;
+            --orange: #FF9500;
+            --gray: #8E8E93;
+            --bg: #f2f2f7;
+            --card: rgba(255,255,255,0.92);
+            --text: #1d1d1f;
+            --border: rgba(0,0,0,0.07);
+            --row-h: 42px;
+            --row-gap: 5px;
         }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            padding: 10px; background: #f2f2f7; color: var(--text-dark); margin: 0; overflow: hidden; 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        .logo-container { text-align: center; margin-bottom: 10px; }
-        .logo-container img { max-width: 130px; height: auto; mix-blend-mode: multiply; }
-        .warning-wrapper { height: 42px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; }
-        #warning { 
-            display: none; width: 100%; background: var(--apple-orange); color: white; 
-            padding: 10px; border-radius: 21px; font-size: 11px; font-weight: 600; text-align: center; box-sizing: border-box; 
+
+        /* HEADER */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px 8px;
+            flex-shrink: 0;
         }
-        .field-group { 
-            margin-bottom: 6px; background: var(--glass-bg); backdrop-filter: blur(10px); 
-            padding: 6px 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.5); 
+        .header img { height: 26px; mix-blend-mode: multiply; }
+
+        /* MAIN LAYOUT */
+        .layout {
+            display: flex;
+            gap: 14px;
+            padding: 0 16px 16px;
+            flex: 1;
+            min-height: 0;
         }
-        label { display: block; font-size: 9px; color: var(--apple-gray); margin-bottom: 2px; text-transform: uppercase; font-weight: 600; }
-        select, input { width: 100%; height: 26px; border: none; background: transparent; font-size: 14px; color: #000; outline: none; }
-        input[type="date"]::-webkit-calendar-picker-indicator { 
-            font-size: 26px; cursor: pointer; filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%); 
+
+        /* LEFT PANEL */
+        .left-panel {
+            width: 220px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--row-gap);
         }
-        input[type="number"]::-webkit-inner-spin-button { opacity: 1 !important; height: 26px; width: 25px; background: #fff; border-radius: 4px; }
-        .res-container { 
-            margin-top: 15px; margin-bottom: 15px; padding: 12px; background: #fff; 
-            border-radius: 14px; border: 1px solid rgba(0,0,0,0.05); min-height: 75px; 
-            display: flex; flex-direction: column; justify-content: center; text-align: center; 
+
+        /* Unified row height for ALL panels & inputs */
+        .field-group,
+        .sum-check-row {
+            height: var(--row-h);
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 4px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        .calc-line { font-size: 13px; color: var(--text-dark); font-weight: 800; margin-bottom: 4px; }
-        .offer-line { font-size: 13px; color: var(--apple-orange); font-weight: 800; text-transform: uppercase; }
-        .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 8px; }
-        .btn { 
-            height: 44px; border: none; border-radius: 22px; cursor: pointer; 
-            font-weight: 700; font-size: 12px; color: white; text-transform: uppercase; transition: transform 0.1s; 
+
+        .field-group label {
+            display: block;
+            font-size: 9px;
+            color: var(--gray);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 1px;
+            line-height: 1;
         }
-        .btn-blue { background: #007AFF; }
-        .btn-orange { background: var(--apple-orange); }
+        .field-group input {
+            width: 100%;
+            height: 20px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            color: var(--text);
+            outline: none;
+            font-weight: 500;
+            line-height: 1;
+        }
+        .field-row { display: flex; gap: var(--row-gap); }
+        .field-row .field-group { flex: 1; }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            font-size: 14px;
+            cursor: pointer;
+            filter: invert(33%) sepia(94%) saturate(2453%) hue-rotate(206deg) brightness(102%) contrast(107%);
+        }
+        input[type="number"]::-webkit-inner-spin-button { opacity: 1; height: 20px; }
+
+        /* SUM CHECKBOX */
+        .sum-check-row {
+            flex-direction: row;
+            align-items: center;
+            gap: 9px;
+            cursor: pointer;
+            user-select: none;
+            padding: 0 12px;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .sum-check-row.checked {
+            border-color: var(--blue);
+            background: rgba(0,122,255,0.05);
+        }
+        .sum-check-row input[type="checkbox"] {
+            width: 15px; height: 15px;
+            accent-color: var(--blue);
+            cursor: pointer; flex-shrink: 0;
+        }
+        .sum-check-row span {
+            font-size: 11px;
+            color: var(--text);
+            font-weight: 500;
+            line-height: 1.25;
+        }
+
+        /* WARNING */
+        .warning-box {
+            background: var(--orange);
+            color: #fff;
+            border-radius: 10px;
+            padding: 0 12px;
+            height: var(--row-h);
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .warning-box.visible { display: flex; }
+
+        .spacer { flex: 1; min-height: 0; }
+
+        /* COPY BUTTON */
+        .btn-copy {
+            height: 44px;
+            border: none;
+            border-radius: 22px;
+            background: var(--blue);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            cursor: pointer;
+            transition: opacity 0.15s, background 0.2s;
+        }
+        .btn-copy:hover { opacity: 0.88; }
+        .btn-copy:active { opacity: 0.72; }
+        .btn-copy.flash { background: #34C759; }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            gap: 0;
+        }
+
+        .table-head {
+            display: grid;
+            grid-template-columns: 18px 1fr 92px 100px;
+            gap: 0 10px;
+            padding: 0 14px 5px;
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .rooms-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--row-gap);
+            overflow: hidden;
+        }
+
+        .room-row {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            display: grid;
+            grid-template-columns: 18px 1fr 92px 100px;
+            gap: 0 10px;
+            align-items: center;
+            padding: 0 14px;
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+            user-select: none;
+            height: var(--row-h);
+            flex-shrink: 0;
+        }
+        .room-row:hover { background: rgba(255,255,255,1); }
+        .room-row.checked {
+            border-color: var(--blue);
+            background: rgba(0,122,255,0.05);
+        }
+        .room-row input[type="checkbox"] {
+            width: 15px; height: 15px;
+            accent-color: var(--blue);
+            cursor: pointer; flex-shrink: 0;
+            pointer-events: none;
+        }
+        .room-name { font-size: 13px; font-weight: 600; }
+        .price-base {
+            font-size: 13px; font-weight: 700;
+            text-align: right; color: var(--text);
+        }
+        .price-disc {
+            font-size: 13px; font-weight: 700;
+            color: var(--orange); text-align: right;
+        }
+
+        /* TOTAL ROW */
+        .total-row {
+            background: var(--text);
+            border-radius: 12px;
+            display: none;
+            grid-template-columns: 18px 1fr 92px 100px;
+            gap: 0 10px;
+            align-items: center;
+            padding: 0 14px;
+            margin-top: var(--row-gap);
+            height: var(--row-h);
+            flex-shrink: 0;
+        }
+        .total-row.visible { display: grid; }
+        .total-label {
+            font-size: 11px; font-weight: 700;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .total-base {
+            font-size: 14px; font-weight: 800;
+            color: #fff; text-align: right;
+        }
+        .total-disc {
+            font-size: 14px; font-weight: 800;
+            color: var(--orange); text-align: right;
+        }
     </style>
 </head>
 <body>
-    <div class="logo-container"><img src="logo.png" alt="Citrus Hall"></div>
-    <div class="warning-wrapper"><div id="warning"></div></div>
-    
-    <div class="field-group">
-        <label>Зал</label>
-        <select id="room" onchange="calculate()">
-            <option value="Грейпфрут">Грейпфрут</option>
-            <option value="Бергамот">Бергамот</option>
-            <option value="Помело">Помело</option>
-            <option value="Шале">Шале</option>
-            <option value="Свити">Свити</option>
-            <option value="Мандарин">Мандарин</option>
-            <option value="Лайм">Лайм</option>
-            <option value="Библиотека">Библиотека</option>
-        </select>
+
+<div class="header">
+    <img src="logo.png" alt="Citrus Hall">
+</div>
+
+<div class="layout">
+
+    <!-- LEFT: inputs -->
+    <div class="left-panel">
+        <div class="field-group">
+            <label>Дата события</label>
+            <input type="date" id="eventDate" onchange="calculate()">
+        </div>
+        <div class="field-group">
+            <label>День недели</label>
+            <input type="text" id="dayName" readonly style="color:#555;">
+        </div>
+        <div class="field-row">
+            <div class="field-group">
+                <label>Часы</label>
+                <input type="number" id="hours" value="5" min="1" oninput="calculate()">
+            </div>
+            <div class="field-group">
+                <label>Скидка %</label>
+                <input type="number" id="discount" value="10" oninput="calculate()">
+            </div>
+        </div>
+
+        <label class="sum-check-row" id="sumCheckRow">
+            <input type="checkbox" id="showTotal" onchange="onTotalToggle()">
+            <span>Вывести сумму за несколько залов</span>
+        </label>
+
+        <div class="warning-box" id="warning"></div>
+
+        <div class="spacer"></div>
+
+        <button class="btn-copy" id="copyBtn" onclick="copySelected()">Скопировать выбранное</button>
     </div>
-    
-    <div class="field-group"><label>Дата события</label><input type="date" id="eventDate" onchange="calculate()"></div>
-    <div class="field-group"><label>День недели</label><input type="text" id="dayNameDisplay" readonly style="color: #555;"></div>
-    
-    <div style="display: flex; gap: 8px;">
-        <div class="field-group" style="flex: 1;"><label>Часы</label><input type="number" id="hours" value="5" min="1" oninput="calculate()"></div>
-        <div class="field-group" style="flex: 1;"><label>Скидка %</label><input type="number" id="discount" value="10" oninput="calculate()"></div>
+
+    <!-- RIGHT: price table -->
+    <div class="right-panel">
+        <div class="table-head">
+            <span></span>
+            <span>Зал</span>
+            <span style="text-align:right">Итого</span>
+            <span style="text-align:right">Со скидкой</span>
+        </div>
+
+        <div class="rooms-list" id="roomsList"></div>
+
+        <div class="total-row" id="totalRow">
+            <span></span>
+            <span class="total-label">Итого</span>
+            <span class="total-base" id="totalBase">—</span>
+            <span class="total-disc" id="totalDisc">—</span>
+        </div>
     </div>
-    
-    <div class="res-container" id="resultBox">
-        <div id="calcText" class="calc-line"></div>
-        <div id="offerText" class="offer-line"></div>
-    </div>
-    
-    <div class="btn-group">
-        <button class="btn btn-blue" onclick="copyText('no-disc')">Скопировать расчет</button>
-        <button class="btn btn-orange" onclick="copyText('with-disc')">Скопировать со скидкой</button>
-    </div>
 
-    <script>
-        const priceList = {
-            "Грейпфрут": [3700, 3000, 3700, 3700, 3700, 4000, 5500],
-            "Бергамот":  [3700, 3000, 3200, 3200, 3200, 3800, 5000],
-            "Помело":    [2700, 2300, 2500, 2500, 2500, 2800, 3500],
-            "Шале":      [2700, 2300, 2500, 2500, 2500, 2800, 3500],
-            "Свити":     [2800, 2000, 2200, 2200, 2200, 2700, 3400],
-            "Мандарин":  [2300, 1900, 1900, 1900, 1900, 2300, 2800],
-            "Лайм":      [2000, 1000, 1000, 1000, 1000, 1700, 2000],
-            "Библиотека":[2000, 1000, 1000, 1000, 1000, 1700, 2000]
-        };
-        const daysNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+</div>
 
-        function formatPrice(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+<script>
+const ROOMS = ["Грейпфрут","Бергамот","Помело","Шале","Свити","Мандарин","Лайм","Библиотека"];
+const PRICES = {
+    "Грейпфрут": [4000,3000,3700,3700,3700,5000,7500],
+    "Бергамот":  [4000,3000,3200,3200,3200,5000,6900],
+    "Помело":    [3000,2300,2500,2500,2500,3500,4800],
+    "Шале":      [3200,2300,2500,2500,2500,3500,5100],
+    "Свити":     [3000,2000,2200,2200,2200,3500,4600],
+    "Мандарин":  [2500,1900,1900,1900,1900,2800,3300],
+    "Лайм":      [2000,1000,1000,1000,1000,2000,2000],
+    "Библиотека":[2000,1000,1000,1000,1000,2000,2000]
+};
+const CLEAN = { "Лайм": 1000, "Библиотека": 1000 };
+const DAYS = ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"];
 
-        function init() {
-            const params = new URLSearchParams(window.location.search);
-            const rawName = params.get('name') || "";
-            let name = decodeURIComponent(rawName);
-            
-            let foundDate = null;
-            let foundHours = 5;
+function fmt(n) { return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
 
-            // 1. Ищем ДАТУ и удаляем её из временной строки, чтобы не путать с часами
-            // Паттерн ищет "19-20.03" или "09.03"
-            const dateRegex = /(\d{1,2}(?:-\d{1,2})?)\.(\d{2})/;
-            const dateMatch = name.match(dateRegex);
-            
-            if (dateMatch) {
-                // Извлекаем первое число дня (из 19-20 берем 19)
-                let dayPart = dateMatch[1].split('-')[0];
-                let monthPart = dateMatch[2];
-                let year = new Date().getFullYear();
-                foundDate = `${year}-${monthPart.padStart(2, '0')}-${dayPart.padStart(2, '0')}`;
-                
-                // Удаляем найденную дату из строки поиска для часов
-                name = name.replace(dateRegex, 'DATE_STUB');
-            }
+function buildRows() {
+    const list = document.getElementById('roomsList');
+    list.innerHTML = '';
+    ROOMS.forEach(room => {
+        const row = document.createElement('div');
+        row.className = 'room-row';
+        row.id = 'row-' + room;
+        row.onclick = () => toggleRoom(room);
+        row.innerHTML = `
+            <input type="checkbox" id="chk-${room}">
+            <span class="room-name">${room}</span>
+            <span class="price-base" id="base-${room}">—</span>
+            <span class="price-disc" id="disc-${room}">—</span>
+        `;
+        list.appendChild(row);
+    });
+}
 
-            // 2. Ищем ЧАСЫ в оставшейся строке
-            const timeMatch = name.match(/(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
-            if (timeMatch) {
-                let start = parseInt(timeMatch[1], 10);
-                let end = parseInt(timeMatch[2], 10);
-                
-                // Переход через полночь
-                if (end <= start && end < 12) end += 24; 
-                foundHours = end - start;
-            }
+function toggleRoom(room) {
+    const chk = document.getElementById('chk-' + room);
+    chk.checked = !chk.checked;
+    document.getElementById('row-' + room).classList.toggle('checked', chk.checked);
+    updateTotal();
+}
 
-            document.getElementById('eventDate').value = foundDate || new Date().toISOString().split('T')[0];
-            document.getElementById('hours').value = foundHours;
-            calculate();
+function onTotalToggle() {
+    const chk = document.getElementById('showTotal');
+    document.getElementById('totalRow').classList.toggle('visible', chk.checked);
+    document.getElementById('sumCheckRow').classList.toggle('checked', chk.checked);
+    updateTotal();
+}
+
+function calculate() {
+    const dVal = document.getElementById('eventDate').value;
+    const h = Number(document.getElementById('hours').value) || 0;
+    const dp = Number(document.getElementById('discount').value) || 0;
+
+    if (!dVal) return;
+    const dObj = new Date(dVal);
+    const dIdx = dObj.getDay();
+    document.getElementById('dayName').value = DAYS[dIdx] || '';
+
+    const mh = (dIdx === 0 || dIdx === 5 || dIdx === 6) ? 5 : 3;
+    const w = document.getElementById('warning');
+    if (h > 0 && h < mh) {
+        w.textContent = `⚠️ МИНИМУМ ${mh} ${mh === 5 ? 'ЧАСОВ' : 'ЧАСА'} В ЭТОТ ДЕНЬ`;
+        w.classList.add('visible');
+    } else {
+        w.classList.remove('visible');
+    }
+
+    ROOMS.forEach(room => {
+        const rate = PRICES[room][dIdx];
+        const cl = CLEAN[room] || 2000;
+        const base = rate * h + cl;
+        const disc = Math.round(base * (1 - dp / 100));
+        document.getElementById('base-' + room).textContent = fmt(base) + ' руб';
+        document.getElementById('disc-' + room).textContent = fmt(disc) + ' руб';
+    });
+
+    updateTotal();
+}
+
+function updateTotal() {
+    const dVal = document.getElementById('eventDate').value;
+    const h = Number(document.getElementById('hours').value) || 0;
+    const dp = Number(document.getElementById('discount').value) || 0;
+    if (!dVal) return;
+
+    const dIdx = new Date(dVal).getDay();
+    let sumBase = 0, sumDisc = 0;
+
+    ROOMS.forEach(room => {
+        const chk = document.getElementById('chk-' + room);
+        if (chk && chk.checked) {
+            const rate = PRICES[room][dIdx];
+            const cl = CLEAN[room] || 2000;
+            const base = rate * h + cl;
+            sumBase += base;
+            sumDisc += Math.round(base * (1 - dp / 100));
         }
+    });
 
-        function calculate() {
-            const z = document.getElementById('room').value, 
-                  dVal = document.getElementById('eventDate').value, 
-                  h = Number(document.getElementById('hours').value) || 0, 
-                  dp = Number(document.getElementById('discount').value) || 0;
-            
-            const dObj = new Date(dVal), dIdx = dObj.getDay();
-            document.getElementById('dayNameDisplay').value = daysNames[dIdx] || "";
-            
-            const rate = priceList[z][dIdx], 
-                  cl = (z === "Лайм" || z === "Библиотека") ? 1000 : 2000, 
-                  bt = (rate * h) + cl, 
-                  td = Math.round(bt * (1 - dp/100));
-            
-            const w = document.getElementById('warning'), mh = (dIdx === 0 || dIdx === 5 || dIdx === 6) ? 5 : 3;
-            
-            if (h < mh && h > 0) { 
-                w.style.display = 'block'; 
-                w.innerText = `⚠️ МИНИМУМ ${mh} ${mh === 5 ? 'ЧАСОВ' : 'ЧАСА'} В ЭТОТ ДЕНЬ`; 
-            } else { 
-                w.style.display = 'none'; 
-            }
-            
-            document.getElementById('calcText').innerText = `Зал ${z}: ${formatPrice(rate)}р * ${h}ч + ${formatPrice(cl)} (уборка) = ${formatPrice(bt)} руб`;
-            document.getElementById('offerText').innerText = `ПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${formatPrice(td)} руб`;
-        }
+    document.getElementById('totalBase').textContent = fmt(sumBase) + ' руб';
+    document.getElementById('totalDisc').textContent = fmt(sumDisc) + ' руб';
+}
 
-        function copyText(m) {
-            const t = (m === 'no-disc') ? document.getElementById('calcText').innerText : 
-                      document.getElementById('calcText').innerText + '\n' + document.getElementById('offerText').innerText;
-            const el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select(); 
-            document.execCommand('copy'); document.body.removeChild(el);
-            const rb = document.getElementById('resultBox'); rb.style.borderColor = "#007AFF"; 
-            setTimeout(() => { rb.style.borderColor = "rgba(0,0,0,0.05)"; }, 600);
-        }
+function copySelected() {
+    const dVal = document.getElementById('eventDate').value;
+    const h = Number(document.getElementById('hours').value) || 0;
+    const dp = Number(document.getElementById('discount').value) || 0;
+    const dIdx = dVal ? new Date(dVal).getDay() : 0;
+    const showTotal = document.getElementById('showTotal').checked;
 
-        window.onload = init;
-    </script>
+    const selected = ROOMS.filter(r => {
+        const chk = document.getElementById('chk-' + r);
+        return chk && chk.checked;
+    });
+
+    if (!selected.length) {
+        const btn = document.getElementById('copyBtn');
+        const orig = btn.textContent;
+        btn.textContent = 'Выберите залы →';
+        setTimeout(() => { btn.textContent = orig; }, 1500);
+        return;
+    }
+
+    let text = '';
+    const useTotal = showTotal && selected.length > 1;
+
+    if (useTotal) {
+        const blocks = selected.map(room => {
+            const rate = PRICES[room][dIdx];
+            const cl = CLEAN[room] || 2000;
+            const base = rate * h + cl;
+            return `Зал ${room}: ${fmt(rate)}р * ${h}ч + ${fmt(cl)} (уборка) = ${fmt(base)} руб`;
+        });
+        const sumBase = selected.reduce((s, room) => {
+            const rate = PRICES[room][dIdx];
+            const cl = CLEAN[room] || 2000;
+            return s + rate * h + cl;
+        }, 0);
+        const sumDisc = Math.round(sumBase * (1 - dp / 100));
+
+        text = blocks.join('\n') +
+               `\n\nИТОГО: ${fmt(sumBase)} руб` +
+               `\nПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${fmt(sumDisc)} РУБ`;
+    } else {
+        const blocks = selected.map(room => {
+            const rate = PRICES[room][dIdx];
+            const cl = CLEAN[room] || 2000;
+            const base = rate * h + cl;
+            const disc = Math.round(base * (1 - dp / 100));
+            return `Зал ${room}: ${fmt(rate)}р * ${h}ч + ${fmt(cl)} (уборка) = ${fmt(base)} руб\nПРИ ОПЛАТЕ СЕГОДНЯ СО СКИДКОЙ ${dp}% ИТОГО ${fmt(disc)} РУБ`;
+        });
+        text = blocks.join('\n\n');
+    }
+
+    navigator.clipboard.writeText(text).catch(() => {
+        const el = document.createElement('textarea');
+        el.value = text; document.body.appendChild(el); el.select();
+        document.execCommand('copy'); document.body.removeChild(el);
+    });
+
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ Скопировано';
+    btn.classList.add('flash');
+    setTimeout(() => {
+        btn.textContent = 'Скопировать выбранное';
+        btn.classList.remove('flash');
+    }, 1400);
+}
+
+function init() {
+    buildRows();
+
+    const params = new URLSearchParams(window.location.search);
+    const rawName = params.get('name') || '';
+    let name = decodeURIComponent(rawName);
+
+    let foundDate = null;
+    let foundHours = 5;
+
+    const dateRegex = /(\d{1,2}(?:-\d{1,2})?)\.(\d{2})/;
+    const dateMatch = name.match(dateRegex);
+    if (dateMatch) {
+        let dayPart = dateMatch[1].split('-')[0];
+        let monthPart = dateMatch[2];
+        let year = new Date().getFullYear();
+        foundDate = `${year}-${monthPart.padStart(2,'0')}-${dayPart.padStart(2,'0')}`;
+        name = name.replace(dateRegex, 'DATE_STUB');
+    }
+
+    const timeMatch = name.match(/(?:с\s*)?(\d{1,2})(?::\d{2})?\s*(?:-|до)\s*(\d{1,2})(?::\d{2})?/i);
+    if (timeMatch) {
+        let start = parseInt(timeMatch[1], 10);
+        let end = parseInt(timeMatch[2], 10);
+        if (end <= start && end < 12) end += 24;
+        foundHours = end - start;
+    }
+
+    document.getElementById('eventDate').value = foundDate || new Date().toISOString().split('T')[0];
+    document.getElementById('hours').value = foundHours;
+    calculate();
+}
+
+window.onload = init;
+</script>
 </body>
 </html>
